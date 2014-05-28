@@ -238,7 +238,7 @@ function no () {
 }
 
 $(document).ready(function(){
-    $("#status").text("Fetching dictionary data...");
+    $("#status").text("Loading dictionary...");
     $.ajax({
         url: "kanjidic.1-6",
         async: false,
@@ -246,7 +246,7 @@ $(document).ready(function(){
         dataType: "text",
         success: initialize,
         error: function (jqXHR, stat, mess) {
-            $("#status").text("Failed to load dictionary data: " + stat + "; " + mess);
+            $("#status").text("Failed to load dictionary: " + stat + "; " + mess);
         }
     });
 });
