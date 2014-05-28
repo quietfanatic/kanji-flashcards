@@ -72,6 +72,11 @@
     font-style: italic;
     text-align: center;
 }
+#status {
+    text-align: center;
+    font-style: italic;
+    margin: 1em;
+}
 #kanji {
     font-size: 1000%;
     text-align: center;
@@ -114,6 +119,7 @@ function shuffle(o){ //v1.0
 };
 
 function initialize (data) {
+    $("#status").text("Initializing dictionary...");
     var matches = data.match(/..*/g);
     for (var i = 0; i < matches.length; i++) {
         var line = matches[i];
@@ -141,6 +147,8 @@ function initialize (data) {
     $("#yes").click(yes);
     $("#reset").click(reset);
     $(".settings-half").click(show_fields);
+    $("#status").text("Everything's ready.");
+    $("#status").css("display", "none");
     reset();
 }
 
@@ -215,12 +223,16 @@ function no () {
 }
 
 $(document).ready(function(){
+    $("#status").text("Fetching dictionary data...");
     $.ajax({
         url: "kanjidic.utf-8",
         async: false,
         mimeType: "text/plain; charset=UTF-8",
         dataType: "text",
-        success: initialize
+        success: initialize,
+        fail: function (jqXHR, stat, mess) {
+            $("#status").text("Failed to load dictionary data: " + stat + "; " + mess);
+        }
     });
 });
 
@@ -229,9 +241,6 @@ $(document).ready(function(){
 </head>
 <body>
 
-<noscript>
-This page requires javascript to do anything remotely interesting.
-</noscript>
 <div id="main">
     <div id="control">
         <input type="checkbox" id="control-hider" />
@@ -274,6 +283,11 @@ This page requires javascript to do anything remotely interesting.
                 This app uses <a href="http://www.csse.monash.edu.au/~jwb/kanjidic.html" title="The KANJIDIC Home Page">the KANJIDIC project</a> under the Creative Commons Attribution-ShareAlike Licence (V3.0).
             </div>
         </div>
+    </div>
+    <div id="status">
+        <noscript>
+        This page requires javascript to do anything remotely interesting.
+        </noscript>
     </div>
     <div id="card">
         <div id="buttons">
