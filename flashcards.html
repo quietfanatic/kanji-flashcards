@@ -150,8 +150,8 @@ function initialize (data) {
             kanji: line[0],
             grade: grade_m == null ? 0 : parseInt(grade_m[0].slice(1)),
             unicode: unicode_m[0].slice(1),
-            onyomi: onyomi_m,
-            kunyomi: kunyomi_m,
+            onyomi: onyomi_m == null ? [] : onyomi_m,
+            kunyomi: kunyomi_m == null ? [] : kunyomi_m,
             nanori: nanori_m,
             meanings: meanings,
             everything: line
