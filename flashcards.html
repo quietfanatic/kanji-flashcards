@@ -244,7 +244,7 @@ $(document).ready(function(){
         mimeType: "text/plain; charset=UTF-8",
         dataType: "text",
         success: initialize,
-        fail: function (jqXHR, stat, mess) {
+        error: function (jqXHR, stat, mess) {
             $("#status").text("Failed to load dictionary data: " + stat + "; " + mess);
         }
     });
