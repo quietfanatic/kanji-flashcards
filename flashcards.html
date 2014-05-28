@@ -23,8 +23,10 @@
     padding: 0.2em;
     padding-left: 0.4em;
     padding-right: 0.4em;
+    text-align: center;
 }
-.title {
+#title {
+    float: left;
     font-weight: bold;
 }
 #control-label {
@@ -117,6 +119,8 @@ var dic = [];
 var cards = [];
 var current = null;
 var front = false;
+var n_correct = 0;
+var deck_size = 0;
 
 //+ Jonas Raoni Soares Silva
 //@ http://jsfromhell.com/array/shuffle [v1.0]
@@ -157,7 +161,7 @@ function initialize (data) {
     $("#no").click(no);
     $("#yes").click(yes);
     $("#reset").click(reset);
-    $(".settings-half").click(show_fields);
+    $(".settings-half").click(update_display);
     $("#status").text("Everything's ready.");
     $("#status").css("display", "none");
     $(document).keydown(function(e){
@@ -186,6 +190,8 @@ function reset () {
         }
     }
     cards = shuffle(cards);
+    n_correct = 0;
+    deck_size = cards.length;
     front = false;
     draw_card();
 }
@@ -193,7 +199,7 @@ function reset () {
 function show_if_checked (elem, check) {
     $(elem).css("display", ($(check).length > 0 ? "block" : "none"));
 }
-function show_fields () {
+function update_display () {
     if (front) {
         show_if_checked("#kanji", "#front-kanji:checked");
         show_if_checked("#on-yomi", "#front-on-yomi:checked");
@@ -210,13 +216,14 @@ function show_fields () {
         show_if_checked("#meanings", "#back-meanings:checked");
         show_if_checked("#everything", "#back-everything:checked");
     }
+    $("#count").text(n_correct + "/" + deck_size);
 }
 
 function draw_card () {
     if (front) return;
     front = true;
     current = cards.shift();
-    show_fields();
+    update_display();
     $("#kanji").text(current.kanji);
     $("#on-yomi").text(current.onyomi.join("、"));
     $("#kun-yomi").text(current.kunyomi.join("、"));
@@ -236,7 +243,7 @@ function draw_card () {
 function flip_card () {
     if (!front) return;
     front = false;
-    show_fields();
+    update_display();
     $("#buttons").css("display", "block");
     $("#card").css("cursor", "auto");
 }
@@ -257,6 +264,7 @@ function process_card (action) {
 }
 
 function yes () {
+    n_correct += 1;
     process_card($("#on-yes").val());
     draw_card();
     return false;
@@ -289,7 +297,8 @@ $(document).ready(function(){
     <div id="control">
         <input type="checkbox" id="control-hider" />
         <div id="control-header">
-            <span class="title">Kanji Flashcards</span>
+            <span id="title">Kanji Flashcards</span>
+            <span id="count"></span>
             <label for="control-hider" id="control-label">settings</label>
         </div>
         <div id="control-body">
