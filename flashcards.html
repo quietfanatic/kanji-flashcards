@@ -161,6 +161,7 @@ function initialize (data) {
     $("#no").click(no);
     $("#yes").click(yes);
     $("#reset").click(reset);
+    $("#card").click(flip_card);
     $(".settings-half").click(update_display);
     $("#status").text("Everything's ready.");
     $("#status").css("display", "none");
@@ -222,8 +223,15 @@ function update_display () {
 function draw_card () {
     if (front) return;
     front = true;
-    current = cards.shift();
     update_display();
+    $("#buttons").css("display", "none");
+    if (cards.length == 0) {
+        $("#status").text("よく出来た！");
+        $("#status").css("display", "block");
+        $("#kanji, .card-field, #everything").text("");
+        return;
+    }
+    current = cards.shift();
     $("#kanji").text(current.kanji);
     $("#on-yomi").text(current.onyomi.join("、"));
     $("#kun-yomi").text(current.kunyomi.join("、"));
@@ -235,9 +243,8 @@ function draw_card () {
     }
     $("#meanings").text(current.meanings.join(", "));
     $("#everything").text(current.everything);
-    $("#buttons").css("display", "none");
+    $("#status").text("");
     $("#card").css("cursor", "pointer");
-    $("#card").click(flip_card);
 }
 
 function flip_card () {
@@ -298,7 +305,7 @@ $(document).ready(function(){
         <input type="checkbox" id="control-hider" />
         <div id="control-header">
             <span id="title">Kanji Flashcards</span>
-            <span id="count"></span>
+            <span id="count"> </span>
             <label for="control-hider" id="control-label">settings</label>
         </div>
         <div id="control-body">
