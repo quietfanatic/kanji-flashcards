@@ -241,7 +241,6 @@ $(document).ready(function(){
     $("#status").text("Loading dictionary...");
     $.ajax({
         url: "kanjidic.1-6",
-        async: false,
         mimeType: "text/plain; charset=UTF-8",
         dataType: "text",
         success: initialize,
