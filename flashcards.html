@@ -115,6 +115,12 @@ var cards = [];
 var current = null;
 var front = false;
 
+var wait = false;
+function enforce_wait () {
+    wait = true;
+    setTimeout(function(){ wait = false }, 100);
+}
+
 //+ Jonas Raoni Soares Silva
 //@ http://jsfromhell.com/array/shuffle [v1.0]
 function shuffle(o){ //v1.0
@@ -198,6 +204,8 @@ function show_fields () {
 }
 
 function draw_card () {
+    if (wait) return false;
+    enforce_wait();
     if (front) return;
     front = true;
     current = cards.shift();
@@ -219,6 +227,8 @@ function draw_card () {
 }
 
 function flip_card () {
+    if (wait) return false;
+    enforce_wait();
     if (!front) return;
     front = false;
     show_fields();
