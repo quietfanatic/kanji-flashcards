@@ -167,8 +167,7 @@ function initialize (data) {
 function reset () {
     cards = [];
     var use_grades = [];
-    for (var i = 0; i < 11; i++) {
-        if (i == 7) continue;  // Grade 7 doesn't exist.
+    for (var i = 1; i < 7; i++) {
         use_grades[i] = ($("#G" + i + ":checked").length > 0);
     }
     for (var i = 0; i < dic.length; i++) {
@@ -247,7 +246,7 @@ function no () {
 $(document).ready(function(){
     $("#status").text("Fetching dictionary data...");
     $.ajax({
-        url: "kanjidic.utf-8",
+        url: "kanjidic.1-6",
         async: false,
         mimeType: "text/plain; charset=UTF-8",
         dataType: "text",
@@ -279,10 +278,6 @@ $(document).ready(function(){
                 <input type="checkbox" id="G4" /><label for="G4">4</label>
                 <input type="checkbox" id="G5" /><label for="G5">5</label>
                 <input type="checkbox" id="G6" /><label for="G6">6</label><br>
-                <input type="checkbox" id="G8" /><label for="G8">8</label>
-                <input type="checkbox" id="G9" /><label for="G9">9</label>
-                <input type="checkbox" id="G10" /><label for="G10">10</label>
-                <input type="checkbox" id="G0" /><label for="G0">Ungraded</label>
             </div>
             <div class="settings-half">
                 <div class="settings-label">Show on front:</div>

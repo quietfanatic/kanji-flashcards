@@ -5,5 +5,5 @@ Uses KANJIDIC from http://www.csse.monash.edu.au/~jwb/kanjidic.html
 To install, please download the KANJIDIC file from that website and process it with:
 
     gunzip -c kanjidic.gz | iconv -f euc-jp -t utf-8 > kanjidic.utf-8
-
+    grep -E ' G[1-6] ' kanjidic.utf-8 > kanjidic.1-6
 
