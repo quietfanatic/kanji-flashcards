@@ -214,7 +214,6 @@ function draw_card () {
     $("#buttons").css("display", "none");
     $("#card").css("cursor", "pointer");
     $("#card").click(flip_card);
-    return false;
 }
 
 function flip_card () {
@@ -222,8 +221,6 @@ function flip_card () {
     show_fields();
     $("#buttons").css("display", "block");
     $("#card").css("cursor", "auto");
-    $("#card").off("click");
-    return false;
 }
 
 function yes () {
@@ -310,7 +307,7 @@ $(document).ready(function(){
         <div id="buttons">
             <button id="no">×</button> <button id="yes">○</button>
         </div>
-        <div id="kanji" class="card-field"></div>
+        <div id="kanji"></div>
         <div id="on-yomi" class="card-field"></div>
         <div id="kun-yomi" class="card-field"></div>
         <div id="nanori" class="card-field"></div>
