@@ -81,10 +81,13 @@
     font-size: 1000%;
     text-align: center;
 }
-#on-yomi, #kun-yomi, #meanings {
+.card-field {
     padding: 0.2em;
     font-size: 200%;
     text-align: center;
+}
+.card-field:empty {
+    padding: 0em;
 }
 #buttons {
     display: none;
@@ -124,10 +127,13 @@ function initialize (data) {
     for (var i = 0; i < matches.length; i++) {
         var line = matches[i];
         if (line[0] == '#') continue;
+        var pre_names_m = line.match(/(?:(?! T1).)*/);
+        var names_m = line.match(/ T[^{]*/);
         var grade_m = line.match(/\bG[0-9]+\b/);
         var unicode_m = line.match(/\bU[0-9a-f]+\b/);
         var onyomi_m = line.match(/-?[ァ-ヺ][.ァ-ヺ]*-?/g);
-        var kunyomi_m = line.match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
+        var kunyomi_m = pre_names_m[0].match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
+        var nanori_m = names_m == null ? [] : names_m[0].match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
         var meanings_m = line.match(/\{[^}]+\}/g);
         var meanings = [];
         for (var j = 0; j < meanings_m.length; j++) {
@@ -139,6 +145,7 @@ function initialize (data) {
             unicode: unicode_m[0].slice(1),
             onyomi: onyomi_m,
             kunyomi: kunyomi_m,
+            nanori: nanori_m,
             meanings: meanings,
             everything: line
         });
@@ -175,6 +182,7 @@ function show_fields () {
         show_if_checked("#kanji", "#front-kanji:checked");
         show_if_checked("#on-yomi", "#front-on-yomi:checked");
         show_if_checked("#kun-yomi", "#front-kun-yomi:checked");
+        show_if_checked("#nanori", "#front-nanori:checked");
         show_if_checked("#meanings", "#front-meanings:checked");
         show_if_checked("#everything", "#front-everything:checked");
     }
@@ -182,6 +190,7 @@ function show_fields () {
         show_if_checked("#kanji", "#back-kanji:checked");
         show_if_checked("#on-yomi", "#back-on-yomi:checked");
         show_if_checked("#kun-yomi", "#back-kun-yomi:checked");
+        show_if_checked("#nanori", "#back-nanori:checked");
         show_if_checked("#meanings", "#back-meanings:checked");
         show_if_checked("#everything", "#back-everything:checked");
     }
@@ -194,6 +203,12 @@ function draw_card () {
     $("#kanji").text(current.kanji);
     $("#on-yomi").text(current.onyomi.join(", "));
     $("#kun-yomi").text(current.kunyomi.join(", "));
+    if (current.nanori.length > 0) {
+        $("#nanori").text("(" + current.nanori.join(", ") + ")");
+    }
+    else {
+        $("#nanori").text("");
+    }
     $("#meanings").text(current.meanings.join(", "));
     $("#everything").text(current.everything);
     $("#buttons").css("display", "none");
@@ -268,6 +283,7 @@ $(document).ready(function(){
                 <div class="show-check"><input type="checkbox" id="front-kanji" checked /> <label for="front-kanji">Kanji</label></div>
                 <div class="show-check"><input type="checkbox" id="front-on-yomi" /> <label for="front-on-yomi">On-Yomi</label></div>
                 <div class="show-check"><input type="checkbox" id="front-kun-yomi" /> <label for="front-kun-yomi">Kun-Yomi</label></div>
+                <div class="show-check"><input type="checkbox" id="front-nanori" /> <label for="front-nanori">Kun-Yomi (names)</label></div>
                 <div class="show-check"><input type="checkbox" id="front-meanings" /> <label for="front-meanings">English meanings</label></div>
                 <div class="show-check"><input type="checkbox" id="front-everything" /> <label for="front-everything">Raw KANJIDIC line</label></div>
             </div>
@@ -276,6 +292,7 @@ $(document).ready(function(){
                 <div class="show-check"><input type="checkbox" id="back-kanji" checked /> <label for="back-kanji">Kanji</label></div>
                 <div class="show-check"><input type="checkbox" id="back-on-yomi" checked /> <label for="back-on-yomi">On-Yomi</label></div>
                 <div class="show-check"><input type="checkbox" id="back-kun-yomi" checked /> <label for="back-kun-yomi">Kun-Yomi</label></div>
+                <div class="show-check"><input type="checkbox" id="back-nanori" /> <label for="back-nanori">Kun-Yomi (names)</label></div>
                 <div class="show-check"><input type="checkbox" id="back-meanings" checked /> <label for="back-meanings">English meanings</label></div>
                 <div class="show-check"><input type="checkbox" id="back-everything" /> <label for="back-everything">Raw KANJIDIC line</label></div>
             </div>
@@ -293,10 +310,11 @@ $(document).ready(function(){
         <div id="buttons">
             <button id="no">×</button> <button id="yes">○</button>
         </div>
-        <div id="kanji"></div>
-        <div id="on-yomi"></div>
-        <div id="kun-yomi"></div>
-        <div id="meanings"></div>
+        <div id="kanji" class="card-field"></div>
+        <div id="on-yomi" class="card-field"></div>
+        <div id="kun-yomi" class="card-field"></div>
+        <div id="nanori" class="card-field"></div>
+        <div id="meanings" class="card-field"></div>
         <div id="everything"></div>
     </div>
 </div>
