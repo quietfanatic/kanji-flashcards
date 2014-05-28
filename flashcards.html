@@ -157,6 +157,17 @@ function initialize (data) {
     $(".settings-half").click(show_fields);
     $("#status").text("Everything's ready.");
     $("#status").css("display", "none");
+    $(document).keydown(function(e){
+        if (e.which == 13 || e.which == 32) {
+            flip_card();
+        }
+        else if (e.which == 67 || e.which == 89 || e.which == 79) {
+            yes();
+        }
+        else if (e.which == 69 || e.which == 78 || e.which == 88) {
+            no();
+        }
+    });
     reset();
 }
 
