@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Kanji flash cards</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style>
+#main {
+    width: 32em;
+    margin: auto;
+}
+#control {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    padding: 0.2em;
+}
+#control-hider {
+    display: none;
+}
+#control-header {
+    padding: 0.2em;
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+}
+.title {
+    font-weight: bold;
+}
+#control-label {
+    cursor: pointer;
+    float: right;
+}
+#control-label:before {
+    content: "Show ";
+}
+#control-label:after {
+    content: " ▼";
+}
+#control-hider:checked ~ #control-header #control-label:before {
+    content: "Hide ";
+}
+#control-hider:checked ~ #control-header #control-label:after {
+    content: " ▲";
+}
+#control-body {
+    display: none;
+    padding: 0.2em;
+    padding-left: 0.6em;
+}
+#control-hider:checked ~ #control-body {
+    display: block;
+}
+#settings-grades {
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+}
+#settings-grades input {
+    margin-left: 0.8em;
+}
+.settings-half {
+    display: inline-block;
+    width: 14em;
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+}
+.settings-half input {
+    margin-left: 0.8em;
+}
+#acknowledgements {
+    margin-top: 0.4em;
+    font-size: 80%;
+    font-style: italic;
+    text-align: center;
+}
+#kanji {
+    font-size: 1000%;
+    text-align: center;
+}
+#on-yomi, #kun-yomi, #meanings {
+    padding: 0.2em;
+    font-size: 200%;
+    text-align: center;
+}
+#buttons {
+    display: none;
+}
+#buttons button {
+    font-size: 400%;
+    margin-top: 1em;
+    width: 1.4em;
+    height: 1.4em;
+    cursor: pointer;
+}
+#no {
+    float: left;
+}
+#yes {
+    float: right;
+}
+</style>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+
+var dic = [];
+var cards = [];
+var current = null;
+var front = false;
+
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/array/shuffle [v1.0]
+function shuffle(o){ //v1.0
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
+
+function initialize (data) {
+    var matches = data.match(/..*/g);
+    for (var i = 0; i < matches.length; i++) {
+        var line = matches[i];
+        if (line[0] == '#') continue;
+        var grade_m = line.match(/\bG[0-9]+\b/);
+        var unicode_m = line.match(/\bU[0-9a-f]+\b/);
+        var onyomi_m = line.match(/-?[ァ-ヺ][.ァ-ヺ]*-?/g);
+        var kunyomi_m = line.match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
+        var meanings_m = line.match(/\{[^}]+\}/g);
+        var meanings = [];
+        for (var j = 0; j < meanings_m.length; j++) {
+            meanings.push(meanings_m[j].slice(1, -1));
+        }
+        dic.push({
+            kanji: line[0],
+            grade: grade_m == null ? 0 : parseInt(grade_m[0].slice(1)),
+            unicode: unicode_m[0].slice(1),
+            onyomi: onyomi_m,
+            kunyomi: kunyomi_m,
+            meanings: meanings,
+            everything: line
+        });
+    }
+    $("#no").click(no);
+    $("#yes").click(yes);
+    $("#reset").click(reset);
+    $(".settings-half").click(show_fields);
+    reset();
+}
+
+function reset () {
+    cards = [];
+    var use_grades = [];
+    for (var i = 0; i < 11; i++) {
+        use_grades[i] = ($("#G" + i + ":checked").length > 0);
+    }
+    for (var i = 0; i < dic.length; i++) {
+        if (use_grades[dic[i].grade]) {
+            cards.push(dic[i]);
+        }
+    }
+    cards = shuffle(cards);
+    draw_card();
+}
+
+function show_if_checked (elem, check) {
+    $(elem).css("display", ($(check).length > 0 ? "block" : "none"));
+}
+function show_fields () {
+    if (front) {
+        show_if_checked("#kanji", "#front-kanji:checked");
+        show_if_checked("#on-yomi", "#front-on-yomi:checked");
+        show_if_checked("#kun-yomi", "#front-kun-yomi:checked");
+        show_if_checked("#meanings", "#front-meanings:checked");
+        show_if_checked("#everything", "#front-everything:checked");
+    }
+    else {
+        show_if_checked("#kanji", "#back-kanji:checked");
+        show_if_checked("#on-yomi", "#back-on-yomi:checked");
+        show_if_checked("#kun-yomi", "#back-kun-yomi:checked");
+        show_if_checked("#meanings", "#back-meanings:checked");
+        show_if_checked("#everything", "#back-everything:checked");
+    }
+}
+
+function draw_card () {
+    current = cards.shift();
+    front = true;
+    show_fields();
+    $("#kanji").text(current.kanji);
+    $("#on-yomi").text(current.onyomi.join(", "));
+    $("#kun-yomi").text(current.kunyomi.join(", "));
+    $("#meanings").text(current.meanings.join(", "));
+    $("#everything").text(current.everything);
+    $("#buttons").css("display", "none");
+    $("#card").css("cursor", "pointer");
+    $("#card").click(flip_card);
+    return false;
+}
+
+function flip_card () {
+    front = false;
+    show_fields();
+    $("#buttons").css("display", "block");
+    $("#card").css("cursor", "auto");
+    $("#card").off("click");
+    return false;
+}
+
+function yes () {
+    cards.push(current);
+    draw_card();
+    return false;
+}
+function no () {
+    cards.splice(10, 0, current);
+    draw_card();
+    return false;
+}
+
+$(document).ready(function(){
+    $.ajax({
+        url: "kanjidic.utf-8",
+        async: false,
+        mimeType: "text/plain; charset=UTF-8",
+        dataType: "text",
+        success: initialize
+    });
+});
+
+</script>
+
+</head>
+<body>
+
+<noscript>
+This page requires javascript to do anything remotely interesting.
+</noscript>
+<div id="main">
+    <div id="control">
+        <input type="checkbox" id="control-hider" />
+        <div id="control-header">
+            <span class="title">Kanji Flashcards</span>
+            <label for="control-hider" id="control-label">settings</label>
+        </div>
+        <div id="control-body">
+            <div id="settings-grades">
+                <div class="settings-label"><button id="reset">Create new deck</button> with these grades:</div>
+                <input type="checkbox" id="G1" checked /><label for="G1">1</label>
+                <input type="checkbox" id="G2" /><label for="G2">2</label>
+                <input type="checkbox" id="G3" /><label for="G3">3</label>
+                <input type="checkbox" id="G4" /><label for="G4">4</label>
+                <input type="checkbox" id="G5" /><label for="G5">5</label>
+                <input type="checkbox" id="G6" /><label for="G6">6</label><br>
+                <input type="checkbox" id="G7" /><label for="G7">7</label>
+                <input type="checkbox" id="G8" /><label for="G8">8</label>
+                <input type="checkbox" id="G9" /><label for="G9">9</label>
+                <input type="checkbox" id="G10" /><label for="G10">0</label>
+                <input type="checkbox" id="G0" /><label for="G0">Ungraded</label>
+            </div>
+            <div class="settings-half">
+                <div class="settings-label">Show on front:</div>
+                <div class="show-check"><input type="checkbox" id="front-kanji" checked /> <label for="front-kanji">Kanji</label></div>
+                <div class="show-check"><input type="checkbox" id="front-on-yomi" /> <label for="front-on-yomi">On-Yomi</label></div>
+                <div class="show-check"><input type="checkbox" id="front-kun-yomi" /> <label for="front-kun-yomi">Kun-Yomi</label></div>
+                <div class="show-check"><input type="checkbox" id="front-meanings" /> <label for="front-meanings">English meanings</label></div>
+                <div class="show-check"><input type="checkbox" id="front-everything" /> <label for="front-everything">Raw KANJIDIC line</label></div>
+            </div>
+            <div class="settings-half">
+                <div id="settings-label">Show on back:</div>
+                <div class="show-check"><input type="checkbox" id="back-kanji" checked /> <label for="back-kanji">Kanji</label></div>
+                <div class="show-check"><input type="checkbox" id="back-on-yomi" checked /> <label for="back-on-yomi">On-Yomi</label></div>
+                <div class="show-check"><input type="checkbox" id="back-kun-yomi" checked /> <label for="back-kun-yomi">Kun-Yomi</label></div>
+                <div class="show-check"><input type="checkbox" id="back-meanings" checked /> <label for="back-meanings">English meanings</label></div>
+                <div class="show-check"><input type="checkbox" id="back-everything" /> <label for="back-everything">Raw KANJIDIC line</label></div>
+            </div>
+            <div id="acknowledgements">
+                This app uses <a href="http://www.csse.monash.edu.au/~jwb/kanjidic.html" title="The KANJIDIC Home Page">the KANJIDIC project</a> under the Creative Commons Attribution-ShareAlike Licence (V3.0).
+            </div>
+        </div>
+    </div>
+    <div id="card">
+        <div id="buttons">
+            <button id="no">×</button> <button id="yes">○</button>
+        </div>
+        <div id="kanji"></div>
+        <div id="on-yomi"></div>
+        <div id="kun-yomi"></div>
+        <div id="meanings"></div>
+        <div id="everything"></div>
+    </div>
+</div>
+</body>
+</html>
