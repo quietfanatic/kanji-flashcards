@@ -241,13 +241,28 @@ function flip_card () {
     $("#card").css("cursor", "auto");
 }
 
+function process_card (action) {
+    if (action == "10") {
+        cards.splice(10, 0, current);
+    }
+    else if (action == "random") {
+        cards.splice(5 + Math.floor(Math.random() * (cards.length - 5)), 0, current);
+    }
+    else if (action == "back") {
+        cards.push(current);
+    }
+    else if (action == "remove") {
+         // Silently forget current card
+    }
+}
+
 function yes () {
-    cards.push(current);
+    process_card($("#on-yes").val());
     draw_card();
     return false;
 }
 function no () {
-    cards.splice(10, 0, current);
+    process_card($("#on-no").val());
     draw_card();
     return false;
 }
@@ -304,6 +319,20 @@ $(document).ready(function(){
                 <div class="show-check"><input type="checkbox" id="back-nanori" /> <label for="back-nanori">Kun-Yomi (names)</label></div>
                 <div class="show-check"><input type="checkbox" id="back-meanings" checked /> <label for="back-meanings">English meanings</label></div>
                 <div class="show-check"><input type="checkbox" id="back-everything" /> <label for="back-everything">Raw KANJIDIC line</label></div>
+            </div>
+            <div class="settings-line">
+                <label for="on-no">On error: </label><select id="on-no">
+                    <option value="10" selected>Push 10 behind</option>
+                    <option value="random">Insert randomly back in</option>
+                    <option value="back">Send to back of deck</option>
+                </select>
+            </div>
+            <div class="settings-line">
+                <label for="on-yes">On correct: </label><select id="on-yes">
+                    <option value="random">Insert randomly back in</option>
+                    <option value="back" selected>Send to back of deck</option>
+                    <option value="remove">Remove from deck</option>
+                </select>
             </div>
             <div id="acknowledgements">
                 This app uses <a href="http://www.csse.monash.edu.au/~jwb/kanjidic.html" title="The KANJIDIC Home Page">the KANJIDIC project</a> under the Creative Commons Attribution-ShareAlike Licence (V3.0).
