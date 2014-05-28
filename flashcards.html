@@ -113,11 +113,6 @@ var dic = [];
 var cards = [];
 var current = null;
 var front = false;
-var clickable = true;
-function prevent_quick_click () {
-    clickable = false;
-    setTimeout(function(){ clickable = true; }, 100);
-}
 
 //+ Jonas Raoni Soares Silva
 //@ http://jsfromhell.com/array/shuffle [v1.0]
@@ -202,10 +197,9 @@ function show_fields () {
 }
 
 function draw_card () {
-    if (!clickable) return false;
-    prevent_quick_click();
-    current = cards.shift();
+    if (front) return;
     front = true;
+    current = cards.shift();
     show_fields();
     $("#kanji").text(current.kanji);
     $("#on-yomi").text(current.onyomi.join(", "));
@@ -224,8 +218,7 @@ function draw_card () {
 }
 
 function flip_card () {
-    if (!clickable) return false;
-    prevent_quick_click();
+    if (!front) return;
     front = false;
     show_fields();
     $("#buttons").css("display", "block");
