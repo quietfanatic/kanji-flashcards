@@ -7,14 +7,26 @@
 <meta name="viewport" content="width=530">
 
 <style>
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+#screen {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
 #main {
     width: 32em;
     margin: auto;
 }
 #control {
+    margin: 0.4em;
     border-top: 1px solid;
     border-bottom: 1px solid;
     padding: 0.2em;
+    cursor: auto;
 }
 #control-hider {
     display: none;
@@ -161,7 +173,7 @@ function initialize (data) {
     $("#no").click(no);
     $("#yes").click(yes);
     $("#reset").click(reset);
-    $(document).click(flip_card);
+    $("#screen").click(flip_card);
     $("#control").click(function(event){ event.stopPropagation(); });
     $(".settings-half input").change(update_display);
     $("#theme-select").change(update_style);
@@ -211,7 +223,7 @@ function update_display () {
         show_if_checked("#meanings", "#front-meanings:checked");
         show_if_checked("#everything", "#front-everything:checked");
         $("#buttons").css("display", "none");
-        $("#card").css("cursor", "pointer");
+        $("#screen").css("cursor", "pointer");
     }
     else {
         show_if_checked("#kanji", "#back-kanji:checked");
@@ -221,7 +233,7 @@ function update_display () {
         show_if_checked("#meanings", "#back-meanings:checked");
         show_if_checked("#everything", "#back-everything:checked");
         $("#buttons").css("display", "block");
-        $("#card").css("cursor", "auto");
+        $("#screen").css("cursor", "auto");
     }
     $("#count").text(n_correct + "/" + deck_size);
 }
@@ -312,6 +324,7 @@ $(document).ready(function(){
 </head>
 <body>
 
+<div id="screen">
 <div id="main">
     <div id="control">
         <input type="checkbox" id="control-hider" />
@@ -390,5 +403,7 @@ $(document).ready(function(){
         <div id="everything"></div>
     </div>
 </div>
+</div>
+
 </body>
 </html>
