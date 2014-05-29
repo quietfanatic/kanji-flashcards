@@ -103,7 +103,7 @@ html, body {
     font-size: 1000%;
     text-align: center;
 }
-#kanji, #on-yomi, #kun-yomi, #nanori {
+.jp {
     font-family: sans-serif;
 }
 .card-field {
@@ -183,7 +183,7 @@ function initialize (data) {
     $("#screen").click(flip_card);
     $("#control").click(function(event){ event.stopPropagation(); });
     $("#settings-half input").change(update_display);
-    $("#theme-select").change(update_style);
+    $("#settings-style select").change(update_style);
     $("#status").text("Everything's ready.");
     $("#status").css("display", "none");
     $(document).keydown(function(e){
@@ -304,16 +304,25 @@ function no () {
 }
 
 function update_style () {
-    var style = $("#theme-select").val();
-    if (style == "white") {
+    var theme = $("#theme-select").val();
+    if (theme == "white") {
         $("body").css("background-color", "white").css("color", "black");
     }
-    else if (style == "black") {
+    else if (theme == "black") {
         $("body").css("background-color", "black").css("color", "white");
     }
+    var font = $("#font-select").val();
+    if (font == "gothic") {
+        $(".jp").css("font-family", "sans-serif");
+    }
+    else if (font == "mincho") {
+        $(".jp").css("font-family", "serif");
+    }
+
 }
 
 $(document).ready(function(){
+    update_style();
     $("#status").text("Loading dictionary...");
     $.ajax({
         url: "kanjidic.1-6",
@@ -386,10 +395,14 @@ $(document).ready(function(){
                     </select>
                 </div>
             </div>
-            <div id="settings-theme">
+            <div id="settings-style">
                 <label for="theme-select">Theme: </label><select id="theme-select">
                     <option value="white">White</option>
                     <option value="black">Black</option>
+                </select>
+                <label for="font-select">Font: </label><select id="font-select">
+                    <option value="gothic">Gothic</option>
+                    <option value="mincho">Mincho</option>
                 </select>
             </div>
             <div id="acknowledgements">
@@ -406,10 +419,10 @@ $(document).ready(function(){
         <div id="buttons">
             <button id="no">×</button> <button id="yes">○</button>
         </div>
-        <div id="kanji"></div>
-        <div id="on-yomi" class="card-field"></div>
-        <div id="kun-yomi" class="card-field"></div>
-        <div id="nanori" class="card-field"></div>
+        <div id="kanji" class="jp"></div>
+        <div id="on-yomi" class="card-field jp"></div>
+        <div id="kun-yomi" class="card-field jp"></div>
+        <div id="nanori" class="card-field jp"></div>
         <div id="meanings" class="card-field"></div>
         <div id="everything"></div>
     </div>
