@@ -61,13 +61,18 @@ html, body {
     display: none;
     padding: 0.2em;
     padding-left: 0.6em;
+    text-align: center;
 }
 #control-hider:checked ~ #control-body {
     display: block;
 }
 #settings-grades {
+    text-align: center;
     margin-top: 0.4em;
     margin-bottom: 0.4em;
+}
+#settings-grades button {
+    margin-bottom: 0.2em;
 }
 #settings-grades input {
     margin-left: 0.8em;
@@ -78,14 +83,16 @@ html, body {
     margin-top: 0.4em;
     margin-bottom: 0.4em;
 }
-.settings-half input {
-    margin-left: 0.8em;
+#settings-show .settings-half {
+    text-align: left;
+}
+.show-check {
+    margin-left: 1em;
 }
 #acknowledgements {
     margin-top: 0.4em;
     font-size: 80%;
     font-style: italic;
-    text-align: center;
 }
 #status {
     text-align: center;
@@ -175,7 +182,7 @@ function initialize (data) {
     $("#reset").click(reset);
     $("#screen").click(flip_card);
     $("#control").click(function(event){ event.stopPropagation(); });
-    $(".settings-half input").change(update_display);
+    $("#settings-half input").change(update_display);
     $("#theme-select").change(update_style);
     $("#status").text("Everything's ready.");
     $("#status").css("display", "none");
@@ -343,39 +350,43 @@ $(document).ready(function(){
                 <input type="checkbox" id="G5" /><label for="G5">5</label>
                 <input type="checkbox" id="G6" /><label for="G6">6</label><br>
             </div>
-            <div class="settings-half">
-                <div class="settings-label">Show on front:</div>
-                <div class="show-check"><input type="checkbox" id="front-kanji" checked /> <label for="front-kanji">Kanji</label></div>
-                <div class="show-check"><input type="checkbox" id="front-on-yomi" /> <label for="front-on-yomi">On-Yomi</label></div>
-                <div class="show-check"><input type="checkbox" id="front-kun-yomi" /> <label for="front-kun-yomi">Kun-Yomi</label></div>
-                <div class="show-check"><input type="checkbox" id="front-nanori" /> <label for="front-nanori">Kun-Yomi (names)</label></div>
-                <div class="show-check"><input type="checkbox" id="front-meanings" /> <label for="front-meanings">English meanings</label></div>
-                <div class="show-check"><input type="checkbox" id="front-everything" /> <label for="front-everything">Raw KANJIDIC line</label></div>
+            <div id="settings-show">
+                <div class="settings-half">
+                    <div class="settings-label">Show on front:</div>
+                    <div class="show-check"><input type="checkbox" id="front-kanji" checked /> <label for="front-kanji">Kanji</label></div>
+                    <div class="show-check"><input type="checkbox" id="front-on-yomi" /> <label for="front-on-yomi">On-Yomi</label></div>
+                    <div class="show-check"><input type="checkbox" id="front-kun-yomi" /> <label for="front-kun-yomi">Kun-Yomi</label></div>
+                    <div class="show-check"><input type="checkbox" id="front-nanori" /> <label for="front-nanori">Kun-Yomi (names)</label></div>
+                    <div class="show-check"><input type="checkbox" id="front-meanings" /> <label for="front-meanings">English meanings</label></div>
+                    <div class="show-check"><input type="checkbox" id="front-everything" /> <label for="front-everything">Raw KANJIDIC line</label></div>
+                </div>
+                <div class="settings-half">
+                    <div id="settings-label">Show on back:</div>
+                    <div class="show-check"><input type="checkbox" id="back-kanji" checked /> <label for="back-kanji">Kanji</label></div>
+                    <div class="show-check"><input type="checkbox" id="back-on-yomi" checked /> <label for="back-on-yomi">On-Yomi</label></div>
+                    <div class="show-check"><input type="checkbox" id="back-kun-yomi" checked /> <label for="back-kun-yomi">Kun-Yomi</label></div>
+                    <div class="show-check"><input type="checkbox" id="back-nanori" /> <label for="back-nanori">Kun-Yomi (names)</label></div>
+                    <div class="show-check"><input type="checkbox" id="back-meanings" checked /> <label for="back-meanings">English meanings</label></div>
+                    <div class="show-check"><input type="checkbox" id="back-everything" /> <label for="back-everything">Raw KANJIDIC line</label></div>
+                </div>
             </div>
-            <div class="settings-half">
-                <div id="settings-label">Show on back:</div>
-                <div class="show-check"><input type="checkbox" id="back-kanji" checked /> <label for="back-kanji">Kanji</label></div>
-                <div class="show-check"><input type="checkbox" id="back-on-yomi" checked /> <label for="back-on-yomi">On-Yomi</label></div>
-                <div class="show-check"><input type="checkbox" id="back-kun-yomi" checked /> <label for="back-kun-yomi">Kun-Yomi</label></div>
-                <div class="show-check"><input type="checkbox" id="back-nanori" /> <label for="back-nanori">Kun-Yomi (names)</label></div>
-                <div class="show-check"><input type="checkbox" id="back-meanings" checked /> <label for="back-meanings">English meanings</label></div>
-                <div class="show-check"><input type="checkbox" id="back-everything" /> <label for="back-everything">Raw KANJIDIC line</label></div>
+            <div class="settings-actions">
+                <div class="settings-half">
+                    <label for="on-no">On error:</label><br><select id="on-no">
+                        <option value="10" selected>Put behind 10 cards</option>
+                        <option value="random">Put back randomly</option>
+                        <option value="back">Send to back of deck</option>
+                    </select>
+                </div>
+                <div class="settings-half">
+                    <label for="on-yes">On correct:</label><br><select id="on-yes">
+                        <option value="random">Put back randomly</option>
+                        <option value="back" selected>Send to back of deck</option>
+                        <option value="remove">Remove from deck</option>
+                    </select>
+                </div>
             </div>
-            <div class="settings-line">
-                <label for="on-no">On error: </label><select id="on-no">
-                    <option value="10" selected>Push 10 behind</option>
-                    <option value="random">Insert randomly back in</option>
-                    <option value="back">Send to back of deck</option>
-                </select>
-            </div>
-            <div class="settings-line">
-                <label for="on-yes">On correct: </label><select id="on-yes">
-                    <option value="random">Insert randomly back in</option>
-                    <option value="back" selected>Send to back of deck</option>
-                    <option value="remove">Remove from deck</option>
-                </select>
-            </div>
-            <div class="settings-line">
+            <div id="settings-theme">
                 <label for="theme-select">Theme: </label><select id="theme-select">
                     <option value="white">White</option>
                     <option value="black">Black</option>
