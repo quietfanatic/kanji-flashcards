@@ -161,8 +161,9 @@ function initialize (data) {
     $("#no").click(no);
     $("#yes").click(yes);
     $("#reset").click(reset);
-    $("#card").click(flip_card);
-    $(".settings-half").click(update_display);
+    $(document).click(flip_card);
+    $("#control").click(function(event){ event.stopPropagation(); });
+    $(".settings-half input").change(update_display);
     $("#theme-select").change(update_style);
     $("#status").text("Everything's ready.");
     $("#status").css("display", "none");
