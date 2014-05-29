@@ -163,6 +163,7 @@ function initialize (data) {
     $("#reset").click(reset);
     $("#card").click(flip_card);
     $(".settings-half").click(update_display);
+    $("#theme-select").change(update_style);
     $("#status").text("Everything's ready.");
     $("#status").css("display", "none");
     $(document).keydown(function(e){
@@ -208,6 +209,8 @@ function update_display () {
         show_if_checked("#nanori", "#front-nanori:checked");
         show_if_checked("#meanings", "#front-meanings:checked");
         show_if_checked("#everything", "#front-everything:checked");
+        $("#buttons").css("display", "none");
+        $("#card").css("cursor", "pointer");
     }
     else {
         show_if_checked("#kanji", "#back-kanji:checked");
@@ -216,6 +219,8 @@ function update_display () {
         show_if_checked("#nanori", "#back-nanori:checked");
         show_if_checked("#meanings", "#back-meanings:checked");
         show_if_checked("#everything", "#back-everything:checked");
+        $("#buttons").css("display", "block");
+        $("#card").css("cursor", "auto");
     }
     $("#count").text(n_correct + "/" + deck_size);
 }
@@ -224,7 +229,6 @@ function draw_card () {
     if (front) return;
     front = true;
     update_display();
-    $("#buttons").css("display", "none");
     if (cards.length == 0) {
         $("#status").text("よく出来た！");
         $("#status").css("display", "block");
@@ -244,15 +248,12 @@ function draw_card () {
     $("#meanings").text(current.meanings.join(", "));
     $("#everything").text(current.everything);
     $("#status").text("");
-    $("#card").css("cursor", "pointer");
 }
 
 function flip_card () {
     if (!front) return;
     front = false;
     update_display();
-    $("#buttons").css("display", "block");
-    $("#card").css("cursor", "auto");
 }
 
 function process_card (action) {
@@ -280,6 +281,16 @@ function no () {
     process_card($("#on-no").val());
     draw_card();
     return false;
+}
+
+function update_style () {
+    var style = $("#theme-select").val();
+    if (style == "white") {
+        $("body").css("background-color", "white").css("color", "black");
+    }
+    else if (style == "black") {
+        $("body").css("background-color", "black").css("color", "white");
+    }
 }
 
 $(document).ready(function(){
@@ -348,6 +359,12 @@ $(document).ready(function(){
                     <option value="random">Insert randomly back in</option>
                     <option value="back" selected>Send to back of deck</option>
                     <option value="remove">Remove from deck</option>
+                </select>
+            </div>
+            <div class="settings-line">
+                <label for="theme-select">Theme: </label><select id="theme-select">
+                    <option value="white">White</option>
+                    <option value="black">Black</option>
                 </select>
             </div>
             <div id="acknowledgements">
