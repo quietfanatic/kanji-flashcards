@@ -199,7 +199,24 @@ function initialize (data) {
             no();
         }
     });
-    reset();
+    var deck_s;
+    if (window.localStorage && (deck_s = localStorage.getItem("kanji-flashcards.deck"))) {
+        for (var i = 0; i < deck_s.length; i++) {
+             // This could be made more time-efficient.
+            for (var j = 0; j < dic.length; j++) {
+                if (dic[j].kanji == deck_s[i]) {
+                    cards.push(dic[j]);
+                }
+            }
+        }
+        n_correct = localStorage.getItem("kanji-flashcards.n_correct");
+        deck_size = cards.length;
+        front = false;
+        draw_card();
+    }
+    else {
+        reset();
+    }
 }
 
 function reset () {
@@ -250,6 +267,14 @@ function update_display () {
 function draw_card () {
     if (front) return;
     front = true;
+    if (window.localStorage) {
+        var deck_s;
+        for (var i = 0; i < cards.length; i++) {
+            deck_s += cards[i].kanji;
+        }
+        localStorage.setItem("kanji-flashcards.deck", deck_s);
+        localStorage.setItem("kanji-flashcards.n_correct", n_correct);
+    }
     update_display();
     if (cards.length == 0) {
         $("#status").text("よく出来た！");
