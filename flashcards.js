@@ -13,6 +13,11 @@ function shuffle(o){ //v1.0
     return o;
 };
 
+function span_join (list, sep) {
+    if (list == null) return "";
+    else return "<span>" + list.join("</span>" + sep + "<span>") + "</span>";
+}
+
 function initialize (data) {
     $("#status").text("Initializing dictionary...");
     var matches = data.match(/..*/g);
@@ -23,25 +28,35 @@ function initialize (data) {
         var names_m = line.match(/ T[^{]*/);
         var grade_m = line.match(/\bG[0-9]+\b/);
         var unicode_m = line.match(/\bU[0-9a-f]+\b/);
-        var onyomi_m = line.match(/-?[ァ-ヺ][.ァ-ヺ]*-?/g);
-        var kunyomi_m = pre_names_m[0].match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
-        var kunyomi = kunyomi_m == null ? [] : kunyomi_m;
-        for (var j = 0; j < kunyomi.length; j++) {
-            kunyomi[j] = kunyomi[j].replace(/\.(.*)$/, "<span class=\"okurigana\">$1</span>");
+
+        var onyomi = span_join(line.match(/-?[ァ-ヺ][.ァ-ヺ]*-?/g), "　");
+        var kunyomi = pre_names_m[0].match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
+        if (kunyomi != null) {
+            for (var j = 0; j < kunyomi.length; j++) {
+                kunyomi[j] = kunyomi[j].replace(/\.(.*)$/, "<span class=\"okurigana\">$1</span>");
+            }
         }
-        var nanori_m = names_m == null ? [] : names_m[0].match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
-        var meanings_m = line.match(/\{[^}]+\}/g);
-        var meanings = [];
-        for (var j = 0; j < meanings_m.length; j++) {
-            meanings.push(meanings_m[j].slice(1, -1));
+        kunyomi = span_join(kunyomi, "　");
+
+        var nanori = names_m == null ? null : names_m[0].match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
+        nanori = span_join(nanori, "　");
+        if (nanori != "") nanori = "（" + nanori + "）";
+
+        var meanings = line.match(/\{[^}]+\}/g);
+        if (meanings != null) {
+            for (var j = 0; j < meanings.length; j++) {
+                meanings[j] = meanings[j].slice(1, -1);
+            }
         }
+        meanings = span_join(meanings, ", ");
+
         dic.push({
             kanji: line[0],
             grade: grade_m == null ? 0 : parseInt(grade_m[0].slice(1)),
             unicode: unicode_m[0].slice(1),
-            onyomi: onyomi_m == null ? [] : onyomi_m,
+            onyomi: onyomi,
             kunyomi: kunyomi,
-            nanori: nanori_m,
+            nanori: nanori,
             meanings: meanings,
             everything: line
         });
@@ -78,7 +93,7 @@ function initialize (data) {
             }
         }
         n_correct = parseInt(localStorage.getItem("kanji-flashcards.n_correct"));
-        deck_size = cards.length;
+        deck_size = parseInt(localStorage.getItem("kanji-flashcards.deck_size"));
         front = false;
         draw_card();
     }
@@ -169,6 +184,7 @@ function draw_card () {
         }
         localStorage.setItem("kanji-flashcards.deck", deck_s);
         localStorage.setItem("kanji-flashcards.n_correct", n_correct);
+        localStorage.setItem("kanji-flashcards.deck_size", deck_size);
     }
     update_display();
     if (cards.length == 0) {
@@ -179,15 +195,10 @@ function draw_card () {
     }
     current = cards.shift();
     $("#kanji").text(current.kanji);
-    $("#on-yomi").text(current.onyomi.join("　"));
-    $("#kun-yomi").html(current.kunyomi.join("　"));
-    if (current.nanori.length > 0) {
-        $("#nanori").text("（" + current.nanori.join("　") + "）");
-    }
-    else {
-        $("#nanori").text("");
-    }
-    $("#meanings").text(current.meanings.join(", "));
+    $("#on-yomi").html(current.onyomi);
+    $("#kun-yomi").html(current.kunyomi);
+    $("#nanori").html(current.nanori);
+    $("#meanings").html(current.meanings);
     $("#everything").text(current.everything);
     $("#status").text("");
 }

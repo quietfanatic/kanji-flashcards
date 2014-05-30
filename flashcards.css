@@ -149,6 +149,12 @@
 .card-field:empty {
     padding: 0em;
 }
+.card-field > span {
+    white-space: pre;
+}
+#everything {
+    padding: 0.6em;
+}
 #buttons button {
     font-size: 400%;
     margin-top: 1em;
