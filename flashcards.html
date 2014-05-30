@@ -19,7 +19,7 @@
         <input type="checkbox" id="control-hider" />
         <div id="control-header">
             <span id="title">Kanji Flashcards</span>
-            <span id="count"> </span>
+            <span id="count">0/0</span>
             <label for="control-hider" id="control-label">settings</label>
         </div>
         <div id="control-body">
@@ -35,21 +35,21 @@
             <div id="settings-show">
                 <div class="settings-half">
                     <div class="settings-label">Show on front:</div>
-                    <div class="show-check"><input type="checkbox" id="front-kanji" checked /> <label for="front-kanji">Kanji</label></div>
-                    <div class="show-check"><input type="checkbox" id="front-on-yomi" /> <label for="front-on-yomi">On-Yomi</label></div>
-                    <div class="show-check"><input type="checkbox" id="front-kun-yomi" /> <label for="front-kun-yomi">Kun-Yomi</label></div>
-                    <div class="show-check"><input type="checkbox" id="front-nanori" /> <label for="front-nanori">Kun-Yomi (names)</label></div>
-                    <div class="show-check"><input type="checkbox" id="front-meanings" /> <label for="front-meanings">English meanings</label></div>
-                    <div class="show-check"><input type="checkbox" id="front-everything" /> <label for="front-everything">Raw KANJIDIC line</label></div>
+                    <div><input type="checkbox" id="front-kanji" checked /> <label for="front-kanji">Kanji</label></div>
+                    <div><input type="checkbox" id="front-on-yomi" /> <label for="front-on-yomi">On-Yomi</label></div>
+                    <div><input type="checkbox" id="front-kun-yomi" /> <label for="front-kun-yomi">Kun-Yomi</label></div>
+                    <div><input type="checkbox" id="front-nanori" /> <label for="front-nanori">Kun-Yomi (names)</label></div>
+                    <div><input type="checkbox" id="front-meanings" /> <label for="front-meanings">English meanings</label></div>
+                    <div><input type="checkbox" id="front-everything" /> <label for="front-everything">Raw KANJIDIC line</label></div>
                 </div>
                 <div class="settings-half">
                     <div id="settings-label">Show on back:</div>
-                    <div class="show-check"><input type="checkbox" id="back-kanji" checked /> <label for="back-kanji">Kanji</label></div>
-                    <div class="show-check"><input type="checkbox" id="back-on-yomi" checked /> <label for="back-on-yomi">On-Yomi</label></div>
-                    <div class="show-check"><input type="checkbox" id="back-kun-yomi" checked /> <label for="back-kun-yomi">Kun-Yomi</label></div>
-                    <div class="show-check"><input type="checkbox" id="back-nanori" /> <label for="back-nanori">Kun-Yomi (names)</label></div>
-                    <div class="show-check"><input type="checkbox" id="back-meanings" checked /> <label for="back-meanings">English meanings</label></div>
-                    <div class="show-check"><input type="checkbox" id="back-everything" /> <label for="back-everything">Raw KANJIDIC line</label></div>
+                    <div><input type="checkbox" id="back-kanji" checked /> <label for="back-kanji">Kanji</label></div>
+                    <div><input type="checkbox" id="back-on-yomi" checked /> <label for="back-on-yomi">On-Yomi</label></div>
+                    <div><input type="checkbox" id="back-kun-yomi" checked /> <label for="back-kun-yomi">Kun-Yomi</label></div>
+                    <div><input type="checkbox" id="back-nanori" /> <label for="back-nanori">Kun-Yomi (names)</label></div>
+                    <div><input type="checkbox" id="back-meanings" checked /> <label for="back-meanings">English meanings</label></div>
+                    <div><input type="checkbox" id="back-everything" /> <label for="back-everything">Raw KANJIDIC line</label></div>
                 </div>
             </div>
             <div id="settings-actions">
@@ -89,7 +89,7 @@
         </noscript>
     </div>
     <div id="card">
-        <div id="buttons">
+        <div id="buttons" class="hidden">
             <button id="no">×</button> <button id="yes">○</button>
         </div>
         <div id="kanji" class="jp"></div>

@@ -51,7 +51,7 @@ function initialize (data) {
     $("#settings-style select").change(update_style);
     $("#settings-actions select").change(update_actions);
     $("#status").text("Everything's ready.");
-    $("#status").css("display", "none");
+    $("#status").addClass("hidden");
     $(document).keydown(function(e){
         if (e.which == 13 || e.which == 32) {
             flip_card();
@@ -102,7 +102,12 @@ function reset () {
 }
 
 function show_if_checked (elem, check) {
-    $(elem).css("display", ($(check)[0].checked ? "block" : "none"));
+    if ($(check)[0].checked) {
+        $(elem).removeClass("hidden");
+    }
+    else {
+        $(elem).addClass("hidden");
+    }
 }
 
 function change_show () {
@@ -134,8 +139,8 @@ function update_display () {
         show_if_checked("#nanori", "#front-nanori");
         show_if_checked("#meanings", "#front-meanings");
         show_if_checked("#everything", "#front-everything");
-        $("#buttons").css("display", "none");
-        $("#screen").css("cursor", "pointer");
+        $("#buttons").addClass("hidden");
+        $("#screen").addClass("clickable");
     }
     else {
         show_if_checked("#kanji", "#back-kanji");
@@ -144,8 +149,8 @@ function update_display () {
         show_if_checked("#nanori", "#back-nanori");
         show_if_checked("#meanings", "#back-meanings");
         show_if_checked("#everything", "#back-everything");
-        $("#buttons").css("display", "block");
-        $("#screen").css("cursor", "auto");
+        $("#buttons").removeClass("hidden");
+        $("#screen").removeClass("clickable");
     }
     $("#count").text(n_correct + "/" + deck_size);
 }
@@ -164,7 +169,7 @@ function draw_card () {
     update_display();
     if (cards.length == 0) {
         $("#status").text("よく出来た！");
-        $("#status").css("display", "block");
+        $("#status").removeClass("hidden");
         $("#kanji, .card-field, #everything").text("");
         return;
     }
@@ -225,19 +230,12 @@ function update_actions () {
 
 function update_style () {
     var theme = $("#theme-select").val();
-    if (theme == "white") {
-        $("body").css("background-color", "white").css("color", "black");
-    }
-    else if (theme == "black") {
-        $("body").css("background-color", "black").css("color", "white");
-    }
+    if (!theme.match(/^(?:white|black)$/))
+        theme = "white";
     var font = $("#font-select").val();
-    if (font == "gothic") {
-        $(".jp").css("font-family", "sans-serif");
-    }
-    else if (font == "mincho") {
-        $(".jp").css("font-family", "serif");
-    }
+    if (!font.match(/^(?:gothic|mincho)$/))
+        font = "gothic";
+    $("body").attr("class", "theme-" + theme + " font-" + font);
     if (window.localStorage) {
         localStorage.setItem("kanji-flashcards.theme", theme);
         localStorage.setItem("kanji-flashcards.font", font);
