@@ -184,8 +184,9 @@ function initialize (data) {
     $("#reset").click(reset);
     $("#screen").click(flip_card);
     $("#control").click(function(event){ event.stopPropagation(); });
-    $("#settings-half input").change(update_display);
+    $("#settings-show input").change(change_show);
     $("#settings-style select").change(update_style);
+    $("#settings-actions select").change(update_actions);
     $("#status").text("Everything's ready.");
     $("#status").css("display", "none");
     $(document).keydown(function(e){
@@ -209,7 +210,7 @@ function initialize (data) {
                 }
             }
         }
-        n_correct = localStorage.getItem("kanji-flashcards.n_correct");
+        n_correct = parseInt(localStorage.getItem("kanji-flashcards.n_correct"));
         deck_size = cards.length;
         front = false;
         draw_card();
@@ -238,26 +239,48 @@ function reset () {
 }
 
 function show_if_checked (elem, check) {
-    $(elem).css("display", ($(check).length > 0 ? "block" : "none"));
+    $(elem).css("display", ($(check)[0].checked ? "block" : "none"));
+}
+
+function change_show () {
+    if (window.localStorage) {
+        var front = "";
+        if ($("#front-kanji")[0].checked) front += " kanji";
+        if ($("#front-on-yomi")[0].checked) front += " on-yomi";
+        if ($("#front-kun-yomi")[0].checked) front += " kun-yomi";
+        if ($("#front-nanori")[0].checked) front += " nanori";
+        if ($("#front-meanings")[0].checked) front += " meanings";
+        if ($("#front-everything")[0].checked) front += " everything";
+        localStorage.setItem("kanji-flashcards.show-front", front);
+        var back = "";
+        if ($("#back-kanji")[0].checked) back += " kanji";
+        if ($("#back-on-yomi")[0].checked) back += " on-yomi";
+        if ($("#back-kun-yomi")[0].checked) back += " kun-yomi";
+        if ($("#back-nanori")[0].checked) back += " nanori";
+        if ($("#back-meanings")[0].checked) back += " meanings";
+        if ($("#back-everything")[0].checked) back += " everything";
+        localStorage.setItem("kanji-flashcards.show-back", back);
+    }
+    update_display();
 }
 function update_display () {
     if (front) {
-        show_if_checked("#kanji", "#front-kanji:checked");
-        show_if_checked("#on-yomi", "#front-on-yomi:checked");
-        show_if_checked("#kun-yomi", "#front-kun-yomi:checked");
-        show_if_checked("#nanori", "#front-nanori:checked");
-        show_if_checked("#meanings", "#front-meanings:checked");
-        show_if_checked("#everything", "#front-everything:checked");
+        show_if_checked("#kanji", "#front-kanji");
+        show_if_checked("#on-yomi", "#front-on-yomi");
+        show_if_checked("#kun-yomi", "#front-kun-yomi");
+        show_if_checked("#nanori", "#front-nanori");
+        show_if_checked("#meanings", "#front-meanings");
+        show_if_checked("#everything", "#front-everything");
         $("#buttons").css("display", "none");
         $("#screen").css("cursor", "pointer");
     }
     else {
-        show_if_checked("#kanji", "#back-kanji:checked");
-        show_if_checked("#on-yomi", "#back-on-yomi:checked");
-        show_if_checked("#kun-yomi", "#back-kun-yomi:checked");
-        show_if_checked("#nanori", "#back-nanori:checked");
-        show_if_checked("#meanings", "#back-meanings:checked");
-        show_if_checked("#everything", "#back-everything:checked");
+        show_if_checked("#kanji", "#back-kanji");
+        show_if_checked("#on-yomi", "#back-on-yomi");
+        show_if_checked("#kun-yomi", "#back-kun-yomi");
+        show_if_checked("#nanori", "#back-nanori");
+        show_if_checked("#meanings", "#back-meanings");
+        show_if_checked("#everything", "#back-everything");
         $("#buttons").css("display", "block");
         $("#screen").css("cursor", "auto");
     }
@@ -330,6 +353,13 @@ function no () {
     return false;
 }
 
+function update_actions () {
+    if (window.localStorage) {
+        var actions = $("#on-no").val() + " " + $("#on-yes").val();
+        localStorage.setItem("kanji-flashcards.actions", actions);
+    }
+}
+
 function update_style () {
     var theme = $("#theme-select").val();
     if (theme == "white") {
@@ -345,10 +375,47 @@ function update_style () {
     else if (font == "mincho") {
         $(".jp").css("font-family", "serif");
     }
-
+    if (window.localStorage) {
+        localStorage.setItem("kanji-flashcards.theme", theme);
+        localStorage.setItem("kanji-flashcards.font", font);
+    }
 }
 
 $(document).ready(function(){
+    if (window.localStorage) {
+        var theme = localStorage.getItem("kanji-flashcards.theme");
+        if (theme && theme.match(/^(?:white|black)$/)) {
+            $("#theme-select").val(theme);
+        }
+        var font = localStorage.getItem("kanji-flashcards.font")
+        if (font && font.match(/^(?:gothic|mincho)$/)) {
+            $("#font-select").val(font);
+        }
+        var front = localStorage.getItem("kanji-flashcards.show-front");
+        if (front) {
+            $("#front-kanji")[0].checked = !!front.match(/\bkanji\b/);
+            $("#front-on-yomi")[0].checked = !!front.match(/\bon-yomi\b/);
+            $("#front-kun-yomi")[0].checked = !!front.match(/\bkun-yomi\b/);
+            $("#front-nanori")[0].checked = !!front.match(/\bnanori\b/);
+            $("#front-meanings")[0].checked = !!front.match(/\bmeanings\b/);
+            $("#front-everything")[0].checked = !!front.match(/\beverything\b/);
+        }
+        var back = localStorage.getItem("kanji-flashcards.show-back");
+        if (back) {
+            $("#back-kanji")[0].checked = !!back.match(/\bkanji\b/);
+            $("#back-on-yomi")[0].checked = !!back.match(/\bon-yomi\b/);
+            $("#back-kun-yomi")[0].checked = !!back.match(/\bkun-yomi\b/);
+            $("#back-nanori")[0].checked = !!back.match(/\bnanori\b/);
+            $("#back-meanings")[0].checked = !!back.match(/\bmeanings\b/);
+            $("#back-everything")[0].checked = !!back.match(/\beverything\b/);
+        }
+        var actions = localStorage.getItem("kanji-flashcards.actions");
+        if (actions) {
+            var match = actions.match(/^(10|random|back) (random|back|remove)$/);
+            if (match[1]) $("#on-no").val(match[1]);
+            if (match[2]) $("#on-yes").val(match[2]);
+        }
+    }
     update_style();
     $("#status").text("Loading dictionary...");
     $.ajax({
@@ -406,19 +473,19 @@ $(document).ready(function(){
                     <div class="show-check"><input type="checkbox" id="back-everything" /> <label for="back-everything">Raw KANJIDIC line</label></div>
                 </div>
             </div>
-            <div class="settings-actions">
+            <div id="settings-actions">
                 <div class="settings-half">
                     <label for="on-no">On error:</label><br><select id="on-no">
-                        <option value="10" selected>Put behind 10 cards</option>
-                        <option value="random">Put back randomly</option>
+                        <option value="10">Put behind 10 cards</option>
+                        <option value="random" selected>Put back randomly</option>
                         <option value="back">Send to back of deck</option>
                     </select>
                 </div>
                 <div class="settings-half">
                     <label for="on-yes">On correct:</label><br><select id="on-yes">
                         <option value="random">Put back randomly</option>
-                        <option value="back" selected>Send to back of deck</option>
-                        <option value="remove">Remove from deck</option>
+                        <option value="back">Send to back of deck</option>
+                        <option value="remove" selected>Remove from deck</option>
                     </select>
                 </div>
             </div>
