@@ -29,6 +29,15 @@
 .clickable {
     cursor: pointer;
 }
+.theme-white .okurigana {
+    color: #7f7f7f;
+}
+.theme-black .okurigana {
+    color: #7f7f7f;
+}
+.okurigana:before {
+    content: ".";
+}
  /* Control block */
 #control {
     border-top: 1px solid;

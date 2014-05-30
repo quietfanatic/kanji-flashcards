@@ -25,6 +25,10 @@ function initialize (data) {
         var unicode_m = line.match(/\bU[0-9a-f]+\b/);
         var onyomi_m = line.match(/-?[ァ-ヺ][.ァ-ヺ]*-?/g);
         var kunyomi_m = pre_names_m[0].match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
+        var kunyomi = kunyomi_m == null ? [] : kunyomi_m;
+        for (var j = 0; j < kunyomi.length; j++) {
+            kunyomi[j] = kunyomi[j].replace(/\.(.*)$/, "<span class=\"okurigana\">$1</span>");
+        }
         var nanori_m = names_m == null ? [] : names_m[0].match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
         var meanings_m = line.match(/\{[^}]+\}/g);
         var meanings = [];
@@ -36,7 +40,7 @@ function initialize (data) {
             grade: grade_m == null ? 0 : parseInt(grade_m[0].slice(1)),
             unicode: unicode_m[0].slice(1),
             onyomi: onyomi_m == null ? [] : onyomi_m,
-            kunyomi: kunyomi_m == null ? [] : kunyomi_m,
+            kunyomi: kunyomi,
             nanori: nanori_m,
             meanings: meanings,
             everything: line
@@ -176,7 +180,7 @@ function draw_card () {
     current = cards.shift();
     $("#kanji").text(current.kanji);
     $("#on-yomi").text(current.onyomi.join("、"));
-    $("#kun-yomi").text(current.kunyomi.join("、"));
+    $("#kun-yomi").html(current.kunyomi.join("、"));
     if (current.nanori.length > 0) {
         $("#nanori").text("（" + current.nanori.join("、") + "）");
     }
