@@ -1,12 +1,25 @@
 
  /* Wrapper */
-.theme-white {
-    background-color: white;
-    color: black;
+.theme-paper { } /* Just all default HTML colors */
+.theme-deepforest {
+    background-color: #0b0800;
+    color: #f7fff7;
+    font-family: "Georgie", "Droid Serif", "Bitstream Charter", serif;
 }
-.theme-black {
-    background-color: black;
-    color: white;
+.theme-deepforest a {
+    color: #6fff4f;
+    text-decoration: none;
+}
+.theme-deepforest a:visited {
+    color: #9fcf2f;
+}
+.theme-deepforest a:hover {
+    text-decoration: underline;
+}
+.theme-deepforest a:focus, .theme-deepforest a:active {
+    outline: none;
+    text-decoration: underline;
+    color: #ffbf6f;
 }
 #screen {
     position: absolute;
@@ -29,10 +42,7 @@
 .clickable {
     cursor: pointer;
 }
-.theme-white .okurigana {
-    color: #7f7f7f;
-}
-.theme-black .okurigana {
+.okurigana {
     color: #7f7f7f;
 }
 .okurigana:before {

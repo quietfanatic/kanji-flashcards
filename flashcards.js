@@ -179,10 +179,10 @@ function draw_card () {
     }
     current = cards.shift();
     $("#kanji").text(current.kanji);
-    $("#on-yomi").text(current.onyomi.join("、"));
-    $("#kun-yomi").html(current.kunyomi.join("、"));
+    $("#on-yomi").text(current.onyomi.join("　"));
+    $("#kun-yomi").html(current.kunyomi.join("　"));
     if (current.nanori.length > 0) {
-        $("#nanori").text("（" + current.nanori.join("、") + "）");
+        $("#nanori").text("（" + current.nanori.join("　") + "）");
     }
     else {
         $("#nanori").text("");
@@ -232,12 +232,19 @@ function update_actions () {
     }
 }
 
+function valid_theme (theme) {
+    return theme.match(/^(?:paper|deepforest)$/);
+}
+function valid_font (font) {
+    return font.match(/^(?:gothic|mincho)$/);
+}
+
 function update_style () {
     var theme = $("#theme-select").val();
-    if (!theme.match(/^(?:white|black)$/))
+    if (!valid_theme(theme))
         theme = "white";
     var font = $("#font-select").val();
-    if (!font.match(/^(?:gothic|mincho)$/))
+    if (!valid_font(font))
         font = "gothic";
     $("body").attr("class", "theme-" + theme + " font-" + font);
     if (window.localStorage) {
@@ -249,11 +256,11 @@ function update_style () {
 $(document).ready(function(){
     if (window.localStorage) {
         var theme = localStorage.getItem("kanji-flashcards.theme");
-        if (theme && theme.match(/^(?:white|black)$/)) {
+        if (theme && valid_theme(theme)) {
             $("#theme-select").val(theme);
         }
         var font = localStorage.getItem("kanji-flashcards.font")
-        if (font && font.match(/^(?:gothic|mincho)$/)) {
+        if (font && valid_font(font)) {
             $("#font-select").val(font);
         }
         var front = localStorage.getItem("kanji-flashcards.show-front");
