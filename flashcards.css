@@ -101,12 +101,20 @@
     text-align: center;
     margin-top: 0.4em;
     margin-bottom: 0.4em;
+    float: left;
 }
 #settings-grades button {
     margin-bottom: 0.2em;
 }
 #settings-grades input {
     margin-left: 0.8em;
+}
+#settings-undo {
+    float: right;
+    margin-top: 1em;
+}
+#settings-show {
+    clear: both;
 }
 .settings-half {
     display: inline-block;

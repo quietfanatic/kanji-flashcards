@@ -5,14 +5,14 @@
 
 var dictionary = [];
 
-var deck = [];
+var deck = [];  // deck[0] is displayed as the current card
 var flipped = false;
 var n_correct = 0;
 var deck_size = 0;
 
- // For change-optimization only
-var current = null;
-
+ // For undo purposes
+var old_deck = null;  // Just copy the entire darn thing
+var undo_yes = true;
 
 ///// Actions /////
 
@@ -46,6 +46,7 @@ function flip () {
 }
 
 function process_card (action) {
+    old_deck = deck.concat();
     if (action == "10") {
         deck.splice(10, 0, deck.shift());
     }
@@ -61,13 +62,23 @@ function process_card (action) {
     save_deck();
 }
 
+function undo () {
+    if (undo_yes) n_correct -= 1;
+    deck = old_deck;
+    old_deck = null;
+    save_deck();
+    flip();
+}
+
 function yes () {
     n_correct += 1;
+    undo_yes = true;
     process_card($("#on-yes").val());
     draw();
     return false;  // Prevent click from cascading to flip()
 }
 function no () {
+    undo_yes = false;
     process_card($("#on-no").val());
     draw();
     return false;
@@ -75,6 +86,9 @@ function no () {
 
 
 ///// Display /////
+
+ // For change-optimization only
+var current = null;
 
 function update_display () {
      // Update card
@@ -121,6 +135,13 @@ function update_display () {
         show_if_checked("#everything", "#back-everything");
         $("#buttons").removeClass("hidden");
         $("#screen").removeClass("clickable");
+    }
+    if (old_deck != null) {
+        var symbol = undo_yes ? "○" : "×";
+        $("#undo").text("Undo " + symbol + " " + old_deck[0].kanji)[0].disabled = false;
+    }
+    else {
+        $("#undo").text("Can't undo")[0].disabled = true;
     }
     $("#count").text(n_correct + "/" + deck_size);
 }
@@ -303,9 +324,10 @@ function initialize (data) {
      // Register event handlers
     $("#no").click(no);
     $("#yes").click(yes);
-    $("#reset").click(reset);
     $("#screen").click(flip);  // Click anywhere except #control to flip
     $("#control").click(function(event){ event.stopPropagation(); });
+    $("#reset").click(reset);
+    $("#undo").click(undo);
     $("#settings-show input").change(function(){ save_settings(); update_display(); });
     $("#settings-style select").change(function(){ save_settings(); update_style(); });
     $("#settings-actions select").change(save_settings);
