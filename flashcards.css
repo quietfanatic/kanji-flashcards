@@ -144,18 +144,18 @@
  /* Main body */
 #status {
     width: 32em;
-    margin: 0;
+    margin: 1em;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     font-style: italic;
-    padding: 1em;
 }
 #card {
     width: 32em;
-    margin: 0;
+    margin-top: 0;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 1em;
 }
 #kanji {
     font-size: 1000%;
