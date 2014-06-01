@@ -41,7 +41,7 @@ function draw () {
 }
 
 function flip () {
-    if (flipped) return true;
+    if (flipped || deck.length == 0) return true;
     flipped = true;
     update_display();
     return false;
@@ -93,26 +93,9 @@ function no () {
 ///// Display /////
 
  // For change-optimization only
-var current = null;
+var current = "";
 
 function update_display () {
-     // Update card
-    if (deck.length == 0) {
-        $("#status").text("よく出来た！").removeClass("hidden");
-        $("#kanji, .card-field, #everything").text("");
-        current = null;
-    }
-    else if (deck[0].kanji != current) {
-        current = deck[0].kanji;
-        $("#kanji").text(deck[0].kanji);
-        $("#on-yomi").html(deck[0].onyomi);
-        $("#kun-yomi").html(deck[0].kunyomi);
-        $("#nanori").html(deck[0].nanori);
-        $("#meanings").html(deck[0].meanings);
-        $("#everything").text(deck[0].everything);
-        $("#status").text("");
-    }
-     // Select which fields are visible
     function show_if_checked (elem, check) {
         if ($(check)[0].checked) {
             $(elem).removeClass("hidden");
@@ -121,25 +104,46 @@ function update_display () {
             $(elem).addClass("hidden");
         }
     }
-    if (!flipped) {  // front
-        show_if_checked("#kanji", "#front-kanji");
-        show_if_checked("#on-yomi", "#front-on-yomi");
-        show_if_checked("#kun-yomi", "#front-kun-yomi");
-        show_if_checked("#nanori", "#front-nanori");
-        show_if_checked("#meanings", "#front-meanings");
-        show_if_checked("#everything", "#front-everything");
+     // Update card
+    if (deck.length == 0) {
+        $("#status").text("よく出来た！").removeClass("hidden");
+        $("#kanji, .card-field, #everything").text("");
+        current = "";
         $("#buttons, #screen-areas").addClass("hidden");
-        $("#screen").addClass("clickable");
-    }
-    else {  // back
-        show_if_checked("#kanji", "#back-kanji");
-        show_if_checked("#on-yomi", "#back-on-yomi");
-        show_if_checked("#kun-yomi", "#back-kun-yomi");
-        show_if_checked("#nanori", "#back-nanori");
-        show_if_checked("#meanings", "#back-meanings");
-        show_if_checked("#everything", "#back-everything");
-        $("#buttons, #screen-areas").removeClass("hidden");
         $("#screen").removeClass("clickable");
+    }
+    else {
+        if (deck[0].kanji != current) {
+            current = deck[0].kanji;
+            $("#kanji").text(deck[0].kanji);
+            $("#on-yomi").html(deck[0].onyomi);
+            $("#kun-yomi").html(deck[0].kunyomi);
+            $("#nanori").html(deck[0].nanori);
+            $("#meanings").html(deck[0].meanings);
+            $("#everything").text(deck[0].everything);
+            $("#status").text("");
+        }
+         // Select which fields are visible
+        if (!flipped) {  // front
+            show_if_checked("#kanji", "#front-kanji");
+            show_if_checked("#on-yomi", "#front-on-yomi");
+            show_if_checked("#kun-yomi", "#front-kun-yomi");
+            show_if_checked("#nanori", "#front-nanori");
+            show_if_checked("#meanings", "#front-meanings");
+            show_if_checked("#everything", "#front-everything");
+            $("#buttons, #screen-areas").addClass("hidden");
+            $("#screen").addClass("clickable");
+        }
+        else {  // back
+            show_if_checked("#kanji", "#back-kanji");
+            show_if_checked("#on-yomi", "#back-on-yomi");
+            show_if_checked("#kun-yomi", "#back-kun-yomi");
+            show_if_checked("#nanori", "#back-nanori");
+            show_if_checked("#meanings", "#back-meanings");
+            show_if_checked("#everything", "#back-everything");
+            $("#buttons, #screen-areas").removeClass("hidden");
+            $("#screen").removeClass("clickable");
+        }
     }
     if (old_deck != null) {
         var symbol = undo_yes ? "○" : "×";
