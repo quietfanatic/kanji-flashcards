@@ -39,6 +39,10 @@
 .hidden {
     display: none;
 }
+.hidden#kanji {
+    display: block;
+    visibility: hidden;
+}
 .clickable {
     cursor: pointer;
 }
