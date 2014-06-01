@@ -144,7 +144,7 @@ function update_display () {
         }
     }
     if (old_deck != null) {
-        var symbol = undo_yes ? "○" : "×";
+        var symbol = undo_yes ? "⚪" : "×";
         $("#undo").text("Undo " + symbol + " " + old_deck[0].kanji)[0].disabled = false;
     }
     else {
