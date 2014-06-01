@@ -128,7 +128,7 @@ function update_display () {
         show_if_checked("#nanori", "#front-nanori");
         show_if_checked("#meanings", "#front-meanings");
         show_if_checked("#everything", "#front-everything");
-        $("#buttons").addClass("hidden");
+        $("#buttons, #screen-areas").addClass("hidden");
         $("#screen").addClass("clickable");
     }
     else {  // back
@@ -138,7 +138,7 @@ function update_display () {
         show_if_checked("#nanori", "#back-nanori");
         show_if_checked("#meanings", "#back-meanings");
         show_if_checked("#everything", "#back-everything");
-        $("#buttons").removeClass("hidden");
+        $("#buttons, #screen-areas").removeClass("hidden");
         $("#screen").removeClass("clickable");
     }
     if (old_deck != null) {
