@@ -17,6 +17,7 @@ var undo_yes = true;
 ///// Actions /////
 
 function reset () {
+    old_deck = null;
     deck = [];
     var use_grades = [];
     for (var i = 1; i < 7; i++) {
