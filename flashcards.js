@@ -41,10 +41,8 @@ function draw () {
 }
 
 function flip () {
-    if (flipped || deck.length == 0) return true;
     flipped = true;
     update_display();
-    return false;
 }
 
 function process_card (action) {
@@ -333,7 +331,8 @@ function initialize (data) {
      // Register event handlers
     $("#no").click(no);
     $("#yes").click(yes);
-    $("#screen").click(flip);  // Click anywhere except #control to flip
+     // Click anywhere except #control to flip
+    $("#screen").click(function(event){ if (!flipped) flip(); });
     $("#control").click(function(event){ event.stopPropagation(); });
     $("#reset").click(reset);
     $("#undo").click(undo);
