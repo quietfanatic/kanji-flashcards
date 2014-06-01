@@ -38,12 +38,13 @@ function reset () {
 function draw () {
     flipped = false;
     update_display();
-
 }
 
 function flip () {
+    if (flipped) return true;
     flipped = true;
     update_display();
+    return false;
 }
 
 function process_card (action) {
@@ -64,6 +65,7 @@ function process_card (action) {
 }
 
 function undo () {
+    if (old_deck == null) return;
     if (undo_yes) n_correct -= 1;
     deck = old_deck;
     old_deck = null;
@@ -72,6 +74,7 @@ function undo () {
 }
 
 function yes () {
+    if (!flipped) return true;
     n_correct += 1;
     undo_yes = true;
     process_card($("#on-yes").val());
@@ -79,6 +82,7 @@ function yes () {
     return false;  // Prevent click from cascading to flip()
 }
 function no () {
+    if (!flipped) return true;
     undo_yes = false;
     process_card($("#on-no").val());
     draw();

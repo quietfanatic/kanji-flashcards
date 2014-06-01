@@ -28,12 +28,9 @@
     bottom: 0;
     top: 0;
     padding: 0.4em;
+    z-index: -2;
 }
 #main {
-    width: 32em;
-    margin: 0;
-    margin-left: auto;
-    margin-right: auto;
 }
  /* Misc */
 .hidden {
@@ -46,6 +43,9 @@
 .clickable {
     cursor: pointer;
 }
+.aclickable {
+    cursor: auto;
+}
 .okurigana {
     color: #7f7f7f;
 }
@@ -54,6 +54,10 @@
 }
  /* Control block */
 #control {
+    width: 32em;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
     border-top: 1px solid;
     border-bottom: 1px solid;
     padding: 0.2em;
@@ -139,9 +143,19 @@
 
  /* Main body */
 #status {
+    width: 32em;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
     font-style: italic;
-    margin: 1em;
+    padding: 1em;
+}
+#card {
+    width: 32em;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 #kanji {
     font-size: 1000%;
@@ -179,5 +193,21 @@
 }
 #yes {
     float: right;
+}
+
+#screen-left, #screen-right {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    cursor: pointer;
+    z-index: -1;
+}
+#screen-left {
+    left: 0;
+}
+#screen-right {
+    right: 0;
 }
 
