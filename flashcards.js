@@ -14,6 +14,9 @@ var deck_size = 0;
 var old_deck = null;  // Just copy the entire darn thing
 var undo_yes = true;
 
+var flip_count = 0;
+var answer_count = 0;
+
 ///// Actions /////
 
 function reset () {
@@ -42,10 +45,12 @@ function draw () {
 
 function flip () {
     flipped = true;
+    flip_count += 1;
     update_display();
 }
 
 function process_card (action) {
+    answer_count += 1;
     old_deck = deck.concat();
     if (action == "10") {
         deck.splice(10, 0, deck.shift());
@@ -119,7 +124,15 @@ function update_display () {
             $("#nanori").html(deck[0].nanori);
             $("#meanings").html(deck[0].meanings);
             $("#everything").text(deck[0].everything);
-            $("#status").text("");
+        }
+        if (flip_count == 0) {
+            $("#status").text("Make a guess and click anywhere to check the answer.").removeClass("hidden");
+        }
+        else if (answer_count == 0) {
+            $("#status").text("Was your guess correct?").removeClass("hidden");
+        }
+        else {
+            $("#status").text("").addClass("hidden");
         }
          // Select which fields are visible
         if (!flipped) {  // front
