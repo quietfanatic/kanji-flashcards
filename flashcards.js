@@ -17,6 +17,8 @@ var undo_yes = true;
 var flip_count = 0;
 var answer_count = 0;
 
+var deck_builder = false;
+
 ///// Actions /////
 
 function create () {
@@ -38,18 +40,35 @@ function create () {
     draw();
 }
 
+function start_deck_builder () {
+    deck_builder = true;
+    $("#card").addClass("hidden");
+    $("#deck-builder").removeClass("hidden");
+    $("#control-hider")[0].checked = false;
+    update_display();
+}
+function stop_deck_builder () {
+    deck_builder = false;
+    $("#deck-builder").addClass("hidden");
+    $("#card").removeClass("hidden");
+    update_display();
+}
+
 function draw () {
+    if (deck_builder) return;
     flipped = false;
     update_display();
 }
 
 function flip () {
+    if (deck_builder) return;
     flipped = true;
     flip_count += 1;
     update_display();
 }
 
 function process_card (action) {
+    if (deck_builder) return;
     answer_count += 1;
     old_deck = deck.concat();
     if (action == "10") {
@@ -68,6 +87,7 @@ function process_card (action) {
 }
 
 function undo () {
+    if (deck_builder) return;
     if (old_deck == null) return;
     if (undo_yes) n_correct -= 1;
     deck = old_deck;
@@ -77,6 +97,7 @@ function undo () {
 }
 
 function yes () {
+    if (deck_builder) return;
     if (!flipped) return true;
     n_correct += 1;
     undo_yes = true;
@@ -85,6 +106,7 @@ function yes () {
     return false;  // Prevent click from cascading to flip()
 }
 function no () {
+    if (deck_builder) return;
     if (!flipped) return true;
     undo_yes = false;
     process_card($("#on-no").val());
@@ -135,7 +157,11 @@ function update_display () {
             $("#status").text("").addClass("hidden");
         }
          // Select which fields are visible
-        if (!flipped) {  // front
+        if (deck_builder) {
+            $("#buttons, #screen-areas").addClass("hidden");
+            $("#screen").removeClass("clickable");
+        }
+        else if (!flipped) {  // front
             show_if_checked("#kanji", "#front-kanji");
             show_if_checked("#on-yomi", "#front-on-yomi");
             show_if_checked("#kun-yomi", "#front-kun-yomi");
@@ -399,22 +425,15 @@ function initialize (data) {
     $("#screen").click(function(event){ if (!flipped) flip(); });
     $("#control").click(function(event){ event.stopPropagation(); });
     $("#deck-builder").click(function(event){ event.stopPropagation(); });
-    $("#new").click(function(){
-        $("#card").addClass("hidden");
-        $("#deck-builder").removeClass("hidden");
-    });
+    $("#new").click(start_deck_builder);
     $("#undo").click(undo);
     $("#settings-show input").change(function(){ save_settings(); update_display(); });
     $("#settings-style select").change(function(){ save_settings(); update_style(); });
     $("#settings-actions select").change(save_settings);
-    $("#deck-cancel").click(function(){
-        $("#deck-builder").addClass("hidden");
-        $("#card").removeClass("hidden");
-    });
+    $("#deck-cancel").click(stop_deck_builder);
     $("#deck-create").click(function(){
         create();
-        $("#deck-builder").addClass("hidden");
-        $("#card").removeClass("hidden");
+        stop_deck_builder();
     });
     $("#status").text("Everything's ready.").addClass("hidden");
     $(document).keydown(function(e){
