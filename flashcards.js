@@ -356,6 +356,40 @@ function initialize (data) {
         builder += template.replace(/#/g, i).replace("0/0", "0/" + count).replace("仮", individual);
     }
     $("#grades").html(builder);
+    $(".grade-select > div").click(function (event) {
+        var self = event.currentTarget;
+        var parent = self.parentNode;
+        if (self.className == "use") {
+            self.className = "";
+        }
+        else {
+            self.className = "use";
+        }
+        var grade = parent.id.match(/\d/)[0];
+        var num = 0;
+        var den = 0;
+        for (var i = 0; i < parent.childNodes.length; i++) {
+            den += 1;
+            if (parent.childNodes[i].className == "use") {
+                num += 1;
+            }
+        }
+        $("#grade-" + grade + "-count").text(num + "/" + den);
+        $("#use-grade-" + grade)[0].checked = (num > 0);
+    });
+    $(".grade-header > input").change(function (event) {
+        var self = event.currentTarget;
+        var grade = self.id.match(/\d/)[0];
+        var individuals = $("#grade-" + grade + "-select > div");
+        if (self.checked) {
+            $("#grade-" + grade + "-count").text(individuals.length + "/" + individuals.length);
+            individuals.attr("class", "use");
+        }
+        else {
+            $("#grade-" + grade + "-count").text("0/" + individuals.length);
+            individuals.attr("class", "");
+        }
+    });
      // Register event handlers
     $("#no").click(no);
     $("#yes").click(yes);

@@ -221,12 +221,10 @@
     cursor: auto;
 }
 #deck-builder > button {
-    margin-left: 1em;
-    margin-right: 1em;
+    margin: 1em;
 }
 #grades {
     border-bottom: 1px solid;
-    text-align: left;
 }
 .hide-grade {
     display: none;
@@ -234,8 +232,8 @@
 .grade {
     border-top: 1px solid;
 }
-.grade-count {
-    margin-left: 2em;
+.grade-header > input, .grade-header > input + label {
+    float: left;
 }
 .grade-individual {
     float: right;
@@ -249,6 +247,7 @@
 .grade-select {
     display: none;
     font-size: 140%;
+    text-align: left;
 }
 .hide-grade:checked + .grade .grade-select {
     display: block;
@@ -258,5 +257,10 @@
     width: 1.4em;
     height: 1.4em;
     text-align: center;
+    color: #7f7f7f;
+    cursor: pointer;
+}
+.grade-select > div.use {
+    color: inherit;
 }
 
