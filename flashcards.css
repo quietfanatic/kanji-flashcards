@@ -211,3 +211,52 @@
     right: 0;
 }
 
+#deck-builder {
+    width: 32em;
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    text-align: center;
+    cursor: auto;
+}
+#deck-builder > button {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+#grades {
+    border-bottom: 1px solid;
+    text-align: left;
+}
+.hide-grade {
+    display: none;
+}
+.grade {
+    border-top: 1px solid;
+}
+.grade-count {
+    margin-left: 2em;
+}
+.grade-individual {
+    float: right;
+}
+.grade-individual:after {
+    content: " ▼";
+}
+.hide-grade:checked + .grade .grade-individual:after {
+    content: " ▲";
+}
+.grade-select {
+    display: none;
+    font-size: 140%;
+}
+.hide-grade:checked + .grade .grade-select {
+    display: block;
+}
+.grade-select > div {
+    display: inline-block;
+    width: 1.4em;
+    height: 1.4em;
+    text-align: center;
+}
+

@@ -341,12 +341,28 @@ function initialize (data) {
             everything: line
         });
     }
+     // Create deck builder
+    var template = $("#grades").html();
+    var builder = "";
+    for (var i = 1; i <= 6; i++) {
+        var individual = "";
+        var count = 0;
+        for (var j = 0; j < dictionary.length; j++) {
+            if (dictionary[j].grade == i) {
+                individual += "<div>" + dictionary[j].kanji + "</div>";
+                count += 1;
+            }
+        }
+        builder += template.replace(/#/g, i).replace("0/0", "0/" + count).replace("仮", individual);
+    }
+    $("#grades").html(builder);
      // Register event handlers
     $("#no").click(no);
     $("#yes").click(yes);
      // Click anywhere except #control to flip
     $("#screen").click(function(event){ if (!flipped) flip(); });
     $("#control").click(function(event){ event.stopPropagation(); });
+    $("#deck-builder").click(function(event){ event.stopPropagation(); });
     $("#reset").click(reset);
     $("#undo").click(undo);
     $("#settings-show input").change(function(){ save_settings(); update_display(); });
