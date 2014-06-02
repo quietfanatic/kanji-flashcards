@@ -19,16 +19,16 @@ var answer_count = 0;
 
 ///// Actions /////
 
-function reset () {
+function create () {
     old_deck = null;
     deck = [];
-    var use_grades = [];
-    for (var i = 1; i < 7; i++) {
-        use_grades[i] = ($("#G" + i + ":checked").length > 0);
-    }
-    for (var i = 0; i < dictionary.length; i++) {
-        if (use_grades[dictionary[i].grade]) {
-            deck.push(dictionary[i]);
+     // Search deck builder for all selected kanji
+    var selected = $(".grade-select > div.use");
+    for (var i = 0; i < selected.length; i++) {
+        for (var j = 0; j < dictionary.length; j++) {
+            if (dictionary[j].kanji == selected[i].textContent) {
+                deck.push(dictionary[j]);
+            }
         }
     }
     deck = shuffle(deck);
@@ -377,7 +377,7 @@ function initialize (data) {
         $("#grade-" + grade + "-count").text(num + "/" + den);
         $("#use-grade-" + grade)[0].checked = (num > 0);
     });
-    $(".grade-header > input").change(function (event) {
+    $(".use-grade > input").change(function (event) {
         var self = event.currentTarget;
         var grade = self.id.match(/\d/)[0];
         var individuals = $("#grade-" + grade + "-select > div");
@@ -390,6 +390,8 @@ function initialize (data) {
             individuals.attr("class", "");
         }
     });
+    $("#use-grade-1").click();
+    $("#new")[0].disabled = false;
      // Register event handlers
     $("#no").click(no);
     $("#yes").click(yes);
@@ -397,11 +399,23 @@ function initialize (data) {
     $("#screen").click(function(event){ if (!flipped) flip(); });
     $("#control").click(function(event){ event.stopPropagation(); });
     $("#deck-builder").click(function(event){ event.stopPropagation(); });
-    $("#reset").click(reset);
+    $("#new").click(function(){
+        $("#card").addClass("hidden");
+        $("#deck-builder").removeClass("hidden");
+    });
     $("#undo").click(undo);
     $("#settings-show input").change(function(){ save_settings(); update_display(); });
     $("#settings-style select").change(function(){ save_settings(); update_style(); });
     $("#settings-actions select").change(save_settings);
+    $("#deck-cancel").click(function(){
+        $("#deck-builder").addClass("hidden");
+        $("#card").removeClass("hidden");
+    });
+    $("#deck-create").click(function(){
+        create();
+        $("#deck-builder").addClass("hidden");
+        $("#card").removeClass("hidden");
+    });
     $("#status").text("Everything's ready.").addClass("hidden");
     $(document).keydown(function(e){
         if (e.which == 13 || e.which == 32) {

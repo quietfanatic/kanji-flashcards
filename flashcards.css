@@ -97,21 +97,13 @@
     padding: 0.2em;
     padding-left: 0.6em;
     text-align: center;
+    clear: both;
 }
 #control-hider:checked ~ #control-body {
     display: block;
 }
-#settings-grades {
-    text-align: center;
-    margin-top: 0.4em;
-    margin-bottom: 0.4em;
-    float: left;
-}
-#settings-grades button {
-    margin-bottom: 0.2em;
-}
-#settings-grades input {
-    margin-left: 0.8em;
+#control-body > button {
+    margin: 1em;
 }
 #settings-undo {
     float: right;
@@ -143,10 +135,7 @@
 
  /* Main body */
 #status {
-    width: 32em;
     margin: 1em;
-    margin-left: auto;
-    margin-right: auto;
     text-align: center;
     font-style: italic;
 }
@@ -230,9 +219,12 @@
     display: none;
 }
 .grade {
+    padding: 0.2em;
+    padding-right: 0.4em;
     border-top: 1px solid;
+    clear: both;
 }
-.grade-header > input, .grade-header > input + label {
+.use-grade {
     float: left;
 }
 .grade-individual {
@@ -246,8 +238,9 @@
 }
 .grade-select {
     display: none;
-    font-size: 140%;
+    font-size: 200%;
     text-align: left;
+    clear: both;
 }
 .hide-grade:checked + .grade .grade-select {
     display: block;

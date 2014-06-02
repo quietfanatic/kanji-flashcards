@@ -22,18 +22,8 @@
             <label for="control-hider" id="control-label">settings</label>
         </div>
         <div id="control-body">
-            <div id="settings-grades">
-                <div class="settings-label"><button id="reset">Create new deck</button> with grades:</div>
-                <input type="checkbox" id="G1" checked /><label for="G1">1</label>
-                <input type="checkbox" id="G2" /><label for="G2">2</label>
-                <input type="checkbox" id="G3" /><label for="G3">3</label>
-                <input type="checkbox" id="G4" /><label for="G4">4</label>
-                <input type="checkbox" id="G5" /><label for="G5">5</label>
-                <input type="checkbox" id="G6" /><label for="G6">6</label><br>
-            </div>
-            <div id="settings-undo">
-                <button id="undo" disabled>Can't undo</button>
-            </div>
+            <button id="new" disabled>New deck...</button>
+            <button id="undo" disabled>Can't undo</button>
             <div id="settings-show">
                 <div class="settings-half">
                     <div class="settings-label">Show on front:</div>
@@ -89,12 +79,12 @@
             </div>
         </div>
     </div>
-    <div id="status">
-        <noscript>
-        This page requires javascript to do anything remotely interesting.
-        </noscript>
-    </div>
     <div id="card">
+        <div id="status">
+            <noscript>
+            This page requires javascript to do anything remotely interesting.
+            </noscript>
+        </div>
         <div id="buttons" class="hidden">
             <button id="no">✕</button> <button id="yes">〇</button>
         </div>
@@ -107,15 +97,17 @@
     </div>
     <div id="deck-builder" class="hidden">
         <button id="deck-cancel">Cancel</button>
-        <button id="deck-commit">Create</button>
+        <button id="deck-create">Create</button>
         <div id="grades">
             <input type="checkbox" class="hide-grade" id="hide-grade-#" />
             <div class="grade" />
                 <div class="grade-header">
-                    <input type="checkbox" id="use-grade-#" />
-                    <label for="grade-#">Grade #</label>
+                    <div class="use-grade">
+                        <input type="checkbox" id="use-grade-#" />
+                        <label for="grade-#">Grade #</label>
+                    </div>
                     <span id="grade-#-count">0/0</span>
-                    <label class="grade-individual" for="hide-grade-#">Select individual kanji</label>
+                    <label class="grade-individual" for="hide-grade-#">Select individual</label>
                 </div>
                 <div class="grade-select jp" id="grade-#-select">仮</div>
             </div>
