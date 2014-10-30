@@ -228,6 +228,7 @@
     float: left;
 }
 .grade-individual {
+    cursor: pointer;
     float: right;
 }
 .grade-individual:after {
