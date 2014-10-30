@@ -367,9 +367,50 @@ function initialize (data) {
             everything: line
         });
     }
+    for (var k in hiragana) {
+        dictionary.push({
+            kanji: k,
+            grade: -1,  // whataver, not actually used
+            unicode: "",  // Do we even use this anywhere?
+            onyomi: "",
+            kunyomi: "",
+            nanori: "",
+            meanings: hiragana[k],
+            everything: ""
+        });
+    }
+    for (var k in katakana) {
+        dictionary.push({
+            kanji: k,
+            grade: -2,
+            unicode: "",
+            onyomi: "",
+            kunyomi: "",
+            nanori: "",
+            meanings: katakana[k],
+            everything: ""
+        });
+    }
      // Create deck builder
     var template = $("#grades").html();
     var builder = "";
+     // hiragana
+    var individual = "";
+    var count = 0;
+    for (var k in hiragana) {
+        individual += "<div>" + k + "</div>";
+        count += 1;
+    }
+    builder += template.replace(/Grade #/, "Hiragana").replace(/#/g, "hiragana").replace("0/0", "0/" + count).replace("仮", individual);
+     // katakana
+    var individual = "";
+    var count = 0;
+    for (var k in katakana) {
+        individual += "<div>" + k + "</div>";
+        count += 1;
+    }
+    builder += template.replace(/Grade #/, "Katakana").replace(/#/g, "katakana").replace("0/0", "0/" + count).replace("仮", individual);
+     // grades
     for (var i = 1; i <= 6; i++) {
         var individual = "";
         var count = 0;
@@ -391,7 +432,7 @@ function initialize (data) {
         else {
             self.className = "use";
         }
-        var grade = parent.id.match(/\d/)[0];
+        var grade = parent.id.match(/^grade-(.*)-select$/)[1];
         var num = 0;
         var den = 0;
         for (var i = 0; i < parent.childNodes.length; i++) {
@@ -405,7 +446,7 @@ function initialize (data) {
     });
     $(".use-grade > input").change(function (event) {
         var self = event.currentTarget;
-        var grade = self.id.match(/\d/)[0];
+        var grade = self.id.match(/^use-grade-(.*)$/)[1];
         var individuals = $("#grade-" + grade + "-select > div");
         if (self.checked) {
             $("#grade-" + grade + "-count").text(individuals.length + "/" + individuals.length);
@@ -470,4 +511,9 @@ function span_join (list, sep) {
     if (list == null) return "";
     else return "<span>" + list.join("</span>" + sep + "<span>") + "</span>";
 }
+
+///// Not worth putting in a separate file /////
+
+var hiragana = {"あ":"a","い":"i","う":"u","え":"e","お":"o","か":"ka","き":"ki","く":"ku","け":"ke","こ":"ko","さ":"sa","し":"si","す":"su","せ":"se","そ":"so","た":"ta","ち":"chi","つ":"tsu","て":"te","と":"to","な":"na","に":"ni","ぬ":"nu","ね":"ne","の":"no","は":"ha","ひ":"hi","ふ":"fu","へ":"he","ほ":"ho","ま":"ma","み":"mi","む":"mu","め":"me","も":"mo","や":"ya","ゆ":"yu","よ":"yo","ら":"ra","り":"ri","る":"ru","れ":"re","ろ":"ro","わ":"wa","を":"wo","ん":"n",};
+var katakana = {"ア":"a","イ":"i","ウ":"u","エ":"e","オ":"o","カ":"ka","キ":"ki","ク":"ku","ケ":"ke","コ":"ko","サ":"sa","シ":"si","ス":"su","セ":"se","ソ":"so","タ":"ta","チ":"chi","ツ":"tsu","テ":"te","ト":"to","ナ":"na","ニ":"ni","ヌ":"nu","ネ":"ne","ノ":"no","ハ":"ha","ヒ":"hi","フ":"fu","ヘ":"he","ホ":"ho","マ":"ma","ミ":"mi","ム":"mu","メ":"me","モ":"mo","ヤ":"ya","ユ":"yu","ヨ":"yo","ラ":"ra","リ":"ri","ル":"ru","レ":"re","ロ":"ro","ワ":"wa","ヲ":"wo","ン":"n"};
 
