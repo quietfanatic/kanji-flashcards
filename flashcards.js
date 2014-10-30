@@ -14,8 +14,7 @@ var deck_size = 0;
 var old_deck = null;  // Just copy the entire darn thing
 var undo_yes = true;
 
-var flip_count = 0;
-var answer_count = 0;
+var show_tutorial = true;
 
 var deck_builder = false;
 
@@ -63,13 +62,12 @@ function draw () {
 function flip () {
     if (deck_builder) return;
     flipped = true;
-    flip_count += 1;
     update_display();
 }
 
 function process_card (action) {
     if (deck_builder) return;
-    answer_count += 1;
+    show_tutorial = false;
     old_deck = deck.concat();
     if (action == "10") {
         deck.splice(10, 0, deck.shift());
@@ -147,11 +145,12 @@ function update_display () {
             $("#meanings").html(deck[0].meanings);
             $("#everything").text(deck[0].everything);
         }
-        if (flip_count == 0) {
-            $("#status").text("Make a guess and click anywhere to check the answer.").removeClass("hidden");
-        }
-        else if (answer_count == 0) {
-            $("#status").text("Was your guess correct?").removeClass("hidden");
+        if (show_tutorial) {
+            if (!flipped)
+                $("#status").text("Make a guess and click anywhere to check the answer.").removeClass("hidden");
+            else {
+                $("#status").text("Was your guess correct?").removeClass("hidden");
+            }
         }
         else {
             $("#status").text("").addClass("hidden");
