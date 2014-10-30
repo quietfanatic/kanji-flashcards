@@ -477,8 +477,8 @@ function initialize (data) {
     $("#settings-actions select").change(save_settings);
     $("#deck-cancel").click(stop_deck_builder);
     $("#deck-create").click(function(){
-        create_deck();
         stop_deck_builder();
+        create_deck();
     });
     $("#status").text("Everything's ready.").addClass("hidden");
     $(document).keydown(function(e){
