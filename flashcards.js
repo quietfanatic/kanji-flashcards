@@ -21,7 +21,7 @@ var deck_builder = false;
 
 ///// Actions /////
 
-function create () {
+function create_deck () {
     old_deck = null;
     deck = [];
      // Search deck builder for all selected kanji
@@ -207,7 +207,8 @@ function save_deck () {
     }
 }
 function load_deck () {
-    if (window.localStorage) {
+    if (window.localStorage && window.localStorage.getItem("kanji-flashcards.deck")) {
+        deck = [];
         var deck_s = localStorage.getItem("kanji-flashcards.deck");
         for (var i = 0; i < deck_s.length; i++) {
              // This could be made more time-efficient.
@@ -219,6 +220,9 @@ function load_deck () {
         }
         n_correct = parseInt(localStorage.getItem("kanji-flashcards.n_correct"));
         deck_size = parseInt(localStorage.getItem("kanji-flashcards.deck_size"));
+    }
+    else {
+        create_deck();
     }
 }
 
@@ -473,7 +477,7 @@ function initialize (data) {
     $("#settings-actions select").change(save_settings);
     $("#deck-cancel").click(stop_deck_builder);
     $("#deck-create").click(function(){
-        create();
+        create_deck();
         stop_deck_builder();
     });
     $("#status").text("Everything's ready.").addClass("hidden");
@@ -488,13 +492,8 @@ function initialize (data) {
             no();
         }
     });
-    if (window.localStorage && localStorage.getItem("kanji-flashcards.deck")) {
-        load_deck();
-        draw();
-    }
-    else {
-        reset();
-    }
+    load_deck();
+    draw();
 }
 
 
