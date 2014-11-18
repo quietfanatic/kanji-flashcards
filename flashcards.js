@@ -3,9 +3,9 @@
 
 ///// State /////
 
-var dictionary = [];
+var dictionary = {};  // keyed by kanji
 
-var deck = [];  // deck[0] is displayed as the current card
+var deck = "";  // deck[0] is displayed as the current card
 var flipped = false;
 var n_correct = 0;
 var deck_size = 0;
@@ -22,15 +22,12 @@ var deck_builder = false;
 
 function create_deck () {
     old_deck = null;
-    deck = [];
+    deck = "";
      // Search deck builder for all selected kanji
     var selected = $(".grade-select > div.use");
     for (var i = 0; i < selected.length; i++) {
-        for (var j = 0; j < dictionary.length; j++) {
-            if (dictionary[j].kanji == selected[i].textContent) {
-                deck.push(dictionary[j]);
-            }
-        }
+        if (selected[i].textContent in dictionary)
+            deck += selected[i].textContent;
     }
     deck = shuffle(deck);
     n_correct = 0;
@@ -68,18 +65,19 @@ function flip () {
 function process_card (action) {
     if (deck_builder) return;
     show_tutorial = false;
-    old_deck = deck.concat();
+    old_deck = deck;
     if (action == "10") {
-        deck.splice(10, 0, deck.shift());
+        deck = deck.substr(1, 10) + deck[0] + deck.substr(11);
     }
     else if (action == "random") {
-        deck.splice(5 + Math.floor(Math.random() * (deck.length - 5)), 0, deck.shift());
+        var i = 10 + Math.floor(Math.random() * (deck.length - 10));
+        deck = deck.substr(1, i) + deck[0] + deck.substr(i + 1);
     }
     else if (action == "back") {
-        deck.push(deck.shift());
+        deck = deck.slice(1) + deck[0];
     }
     else if (action == "remove") {
-        deck.shift();
+        deck = deck.slice(1);
     }
     save_deck();
 }
@@ -136,14 +134,15 @@ function update_display () {
         $("#screen").removeClass("clickable");
     }
     else {
-        if (deck[0].kanji != current) {
-            current = deck[0].kanji;
-            $("#kanji").html(deck[0].kanji);
-            $("#on-yomi").html(deck[0].onyomi);
-            $("#kun-yomi").html(deck[0].kunyomi);
-            $("#nanori").html(deck[0].nanori);
-            $("#meanings").html(deck[0].meanings);
-            $("#everything").text(deck[0].everything);
+        if (deck[0] != current) {
+            current = deck[0];
+            var def = dictionary[deck[0]];
+            $("#kanji").html(def.kanji);
+            $("#on-yomi").html(def.onyomi);
+            $("#kun-yomi").html(def.kunyomi);
+            $("#nanori").html(def.nanori);
+            $("#meanings").html(def.meanings);
+            $("#everything").text(def.everything);
         }
         if (show_tutorial) {
             if (!flipped)
@@ -183,7 +182,7 @@ function update_display () {
     }
     if (old_deck != null) {
         var symbol = undo_yes ? "〇" : "✕";
-        $("#undo").text("Undo " + symbol + " " + old_deck[0].kanji)[0].disabled = false;
+        $("#undo").text("Undo " + symbol + " " + old_deck[0])[0].disabled = false;
     }
     else {
         $("#undo").text("Can't undo")[0].disabled = true;
@@ -196,11 +195,7 @@ function update_display () {
 
 function save_deck () {
     if (window.localStorage) {
-        var deck_s;
-        for (var i = 0; i < deck.length; i++) {
-            deck_s += deck[i].kanji;
-        }
-        localStorage.setItem("kanji-flashcards.deck", deck_s);
+        localStorage.setItem("kanji-flashcards.deck", deck);
         localStorage.setItem("kanji-flashcards.n_correct", n_correct);
         localStorage.setItem("kanji-flashcards.deck_size", deck_size);
     }
@@ -210,12 +205,8 @@ function load_deck () {
         deck = [];
         var deck_s = localStorage.getItem("kanji-flashcards.deck");
         for (var i = 0; i < deck_s.length; i++) {
-             // This could be made more time-efficient.
-            for (var j = 0; j < dictionary.length; j++) {
-                if (dictionary[j].kanji == deck_s[i]) {
-                    deck.push(dictionary[j]);
-                }
-            }
+            if (deck_s[i] in dictionary)
+                deck += deck_s[i];
         }
         n_correct = parseInt(localStorage.getItem("kanji-flashcards.n_correct"));
         deck_size = parseInt(localStorage.getItem("kanji-flashcards.deck_size"));
@@ -359,7 +350,7 @@ function initialize (data) {
         }
         meanings = span_join(meanings, ", ");
 
-        dictionary.push({
+        dictionary[line[0]] = {
             kanji: line[0],
             grade: grade_m == null ? 0 : parseInt(grade_m[0].slice(1)),
             unicode: unicode_m[0].slice(1),
@@ -368,10 +359,10 @@ function initialize (data) {
             nanori: nanori,
             meanings: meanings,
             everything: line
-        });
+        };
     }
     for (var k in hiragana) {
-        dictionary.push({
+        dictionary[k] = {
             kanji: k,
             grade: -1,  // whataver, not actually used
             unicode: "",  // Do we even use this anywhere?
@@ -380,10 +371,10 @@ function initialize (data) {
             nanori: "",
             meanings: hiragana[k],
             everything: ""
-        });
+        };
     }
     for (var k in katakana) {
-        dictionary.push({
+        dictionary[k] = {
             kanji: k,
             grade: -2,
             unicode: "",
@@ -392,7 +383,7 @@ function initialize (data) {
             nanori: "",
             meanings: katakana[k],
             everything: ""
-        });
+        };
     }
      // Create deck builder
     var template = $("#grades").html();
@@ -417,9 +408,9 @@ function initialize (data) {
     for (var i = 1; i <= 6; i++) {
         var individual = "";
         var count = 0;
-        for (var j = 0; j < dictionary.length; j++) {
-            if (dictionary[j].grade == i) {
-                individual += "<div>" + dictionary[j].kanji + "</div>";
+        for (var k in dictionary) {
+            if (dictionary[k].grade == i) {
+                individual += "<div>" + k + "</div>";
                 count += 1;
             }
         }
