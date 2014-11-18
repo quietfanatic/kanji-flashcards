@@ -29,7 +29,7 @@ function create_deck () {
         if (selected[i].textContent in dictionary)
             deck += selected[i].textContent;
     }
-    deck = shuffle(deck);
+    deck = shuffle(deck.split("")).join("");
     n_correct = 0;
     deck_size = deck.length;
     save_deck();
