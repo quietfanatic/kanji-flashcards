@@ -138,7 +138,7 @@ function update_display () {
     else {
         if (deck[0].kanji != current) {
             current = deck[0].kanji;
-            $("#kanji").text(deck[0].kanji);
+            $("#kanji").html(deck[0].kanji);
             $("#on-yomi").html(deck[0].onyomi);
             $("#kun-yomi").html(deck[0].kunyomi);
             $("#nanori").html(deck[0].nanori);
@@ -468,6 +468,7 @@ function initialize (data) {
      // Click anywhere except #control to flip
     $("#screen").click(function(event){ if (!flipped) flip(); });
     $("#control").click(function(event){ event.stopPropagation(); });
+     // Wire up everything in the settings
     $("#deck-builder").click(function(event){ event.stopPropagation(); });
     $("#new").click(start_deck_builder);
     $("#undo").click(undo);

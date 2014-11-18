@@ -146,9 +146,17 @@
     margin-right: auto;
     margin-bottom: 1em;
 }
+#kanji-outer {
+    text-align: center;
+}
 #kanji {
     font-size: 1000%;
-    text-align: center;
+}
+.select-barrier {
+    display: inline-block;
+    width: 0em;
+    height: 0em;
+    overflow: hidden;
 }
 .font-gothic .jp {
     font-family: sans-serif;
