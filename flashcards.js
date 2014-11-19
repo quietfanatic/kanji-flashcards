@@ -220,8 +220,19 @@ function load_deck () {
         deck = window.localStorage.getItem("kanji-flashcards.deck");
         correct = window.localStorage.getItem("kanji-flashcards.correct");
         incorrect = window.localStorage.getItem("kanji-flashcards.incorrect");
+         // Set up the deck builder how it was last time (more or less)
+        var in_original_deck = {};
+        for (var i = 0; i < original_deck.length; i++) {
+            in_original_deck[original_deck[i]] = true;
+        }
+        var divs = $(".grade-select > div");
+        for (var i = 0; i < divs.length; i++) {
+            if (divs[i].textContent in in_original_deck)
+                $(divs[i]).click();
+        }
     }
     else {
+        $("#use-grade-1").click();
         create_deck();
     }
 }
@@ -454,7 +465,6 @@ function initialize (data) {
             individuals.attr("class", "");
         }
     });
-    $("#use-grade-1").click();
     $("#new")[0].disabled = false;
      // Set up event handlers
     $("#yes").click(yes);
