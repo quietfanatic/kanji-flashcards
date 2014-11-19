@@ -81,7 +81,7 @@ function undo () {
     correct = correct.replace(deck[deck_i-1], "");
     incorrect = incorrect.replace(deck[deck_i-1], "");
     save_deck();
-    flip();
+    draw();
 }
 
 function continue_ () {
@@ -130,7 +130,7 @@ function update_display () {
         $("#finished").removeClass("hidden");
         $("#buttons, #screen-areas").addClass("hidden");
         $("#screen").removeClass("clickable");
-        $("#status").html("お疲れ様でした！").removeClass("hidden");
+        $("#status").html("おつかれさまでした！").removeClass("hidden");
         $("#incorrect-label").text("✕ " + incorrect.length);
         $("#incorrect").text(incorrect);
         $("#correct-label").text("〇 " + correct.length);
