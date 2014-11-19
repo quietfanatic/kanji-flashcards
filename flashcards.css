@@ -208,6 +208,34 @@
     right: 0;
 }
 
+#finished {
+    width: 32em;
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    text-align: center;
+}
+#finished button {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+    width: 7.4em;
+}
+.finished-half {
+    display: inline-block;
+    width: 14em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    vertical-align: top;
+}
+#correct, #incorrect {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+    margin-top: 0.2em;
+    font-size: 150%;
+    letter-spacing: 0.1em;
+}
+
 #deck-builder {
     width: 32em;
     margin-top: 0;

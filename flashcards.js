@@ -35,15 +35,11 @@ function create_deck () {
 
 function start_deck_builder () {
     deck_builder = true;
-    $("#card").addClass("hidden");
-    $("#deck-builder").removeClass("hidden");
     $("#control-hider")[0].checked = false;
     update_display();
 }
 function stop_deck_builder () {
     deck_builder = false;
-    $("#deck-builder").addClass("hidden");
-    $("#card").removeClass("hidden");
     update_display();
 }
 
@@ -63,6 +59,7 @@ function yes () {
     if (deck_builder) return;
     if (!flipped) return true;
     correct += deck[correct.length + incorrect.length];
+    show_tutorial = false;
     save_deck();
     draw();
     return false;  // Prevent click from cascading to flip()
@@ -71,6 +68,7 @@ function no () {
     if (deck_builder) return;
     if (!flipped) return true;
     incorrect += deck[correct.length + incorrect.length];
+    show_tutorial = false;
     save_deck();
     draw();
     return false;
@@ -84,6 +82,24 @@ function undo () {
     incorrect = incorrect.replace(deck[deck_i-1], "");
     save_deck();
     flip();
+}
+
+function continue_ () {
+    if (deck_builder) return;
+    deck = shuffle(incorrect.split("")).join("");
+    correct = "";
+    incorrect = "";
+    save_deck();
+    draw();
+}
+
+function start_over () {
+    if (deck_builder) return;
+    deck = shuffled(original_deck.split("")).join("");
+    correct = "";
+    incorrect = "";
+    save_deck();
+    draw();
 }
 
 
@@ -101,18 +117,28 @@ function update_display () {
             $(elem).addClass("hidden");
         }
     }
-     // Update card
     var deck_i = correct.length + incorrect.length;
-    if (deck_i == deck.length) {
-         // TODO: proper end-of-phase screen
-        $("#status").text("よく出来た！").removeClass("hidden");
-        $("#kanji, .card-field, #everything").text("");
-        current = "";
+    if (deck_builder) {  // Show deck builder
+        $("#card, #finished").addClass("hidden");
+        $("#deck-builder").removeClass("hidden");
         $("#buttons, #screen-areas").addClass("hidden");
         $("#screen").removeClass("clickable");
-        $("#count").text(deck.length + "/" + deck.length);
+        $("#status").addClass("hidden");
     }
-    else {
+    else if (deck_i == deck.length) {  // Show finished screen
+        $("#card, #deck-builder").addClass("hidden");
+        $("#finished").removeClass("hidden");
+        $("#buttons, #screen-areas").addClass("hidden");
+        $("#screen").removeClass("clickable");
+        $("#status").html("お疲れ様でした！").removeClass("hidden");
+        $("#incorrect-label").text("✕ " + incorrect.length);
+        $("#incorrect").text(incorrect);
+        $("#correct-label").text("〇 " + correct.length);
+        $("#correct").text(correct);
+    }
+    else {  // Show card
+        $("#finished, #deck-builder").addClass("hidden");
+        $("#card").removeClass("hidden");
         if (deck[deck_i] != current) {
             current = deck[deck_i];
             var def = dictionary[deck[deck_i]];
@@ -134,11 +160,7 @@ function update_display () {
             $("#status").text("").addClass("hidden");
         }
          // Select which fields are visible
-        if (deck_builder) {
-            $("#buttons, #screen-areas").addClass("hidden");
-            $("#screen").removeClass("clickable");
-        }
-        else if (!flipped) {  // front
+        if (!flipped) {  // front
             show_if_checked("#kanji", "#front-kanji");
             show_if_checked("#on-yomi", "#front-on-yomi");
             show_if_checked("#kun-yomi", "#front-kun-yomi");
@@ -158,7 +180,6 @@ function update_display () {
             $("#buttons, #screen-areas").removeClass("hidden");
             $("#screen").removeClass("clickable");
         }
-        $("#count").text((deck_i + 1) + "/" + deck.length);
     }
     if (deck_i != 0) {
         var symbol = correct[correct.length-1] == deck[deck_i-1] ? "〇" : "✕";
@@ -167,6 +188,10 @@ function update_display () {
     else {
         $("#undo").text("Can't undo")[0].disabled = true;
     }
+    if (deck_i < deck.length)
+        $("#count").text((deck_i + 1) + "/" + deck.length);
+    else
+        $("#count").text(deck.length + "/" + deck.length);
 }
 
 
@@ -437,12 +462,16 @@ function initialize (data) {
     $("#deck-builder").click(function(event){ event.stopPropagation(); });
     $("#new").click(start_deck_builder);
     $("#undo").click(undo);
+    $("#continue").click(continue_);
+    $("#start-over").click(start_over);
+    $("#finished-new").click(start_deck_builder);
     $("#settings-show input").change(function(){ save_settings(); update_display(); });
     $("#settings-style select").change(function(){ save_settings(); update_style(); });
     $("#deck-create").click(function(){
         stop_deck_builder();
         create_deck();
     });
+    $("#deck-cancel").click(stop_deck_builder);
     $("#status").text("Everything's ready.").addClass("hidden");
     $(document).keydown(function(e){
         if (e.which == 13 || e.which == 32) {

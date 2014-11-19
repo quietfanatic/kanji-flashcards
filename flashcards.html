@@ -63,12 +63,12 @@
             </div>
         </div>
     </div>
-    <div id="card">
-        <div id="status">
-            <noscript>
-            This page requires javascript to do anything remotely interesting.
-            </noscript>
-        </div>
+    <div id="status">
+        <noscript>
+        This page requires javascript to do anything remotely interesting.
+        </noscript>
+    </div>
+    <div id="card" class="hidden">
         <div id="buttons" class="hidden">
             <button id="no">✕</button> <button id="yes">〇</button>
         </div>
@@ -78,6 +78,21 @@
         <div id="nanori" class="card-field jp"></div>
         <div id="meanings" class="card-field"></div>
         <div id="everything"></div>
+    </div>
+    <div id="finished" class="hidden">
+        <div id="finished-buttons">
+            <button id="continue">Continue</button>
+            <button id="start-over">Start over</button>
+            <button id="finished-new">New deck...</button>
+        </div>
+        <div class="finished-half">
+            <div id="incorrect-label">✕</div>
+            <div id="incorrect"></div>
+        </div>
+        <div class="finished-half">
+            <div id="correct-label">〇</div>
+            <div id="correct"></div>
+        </div>
     </div>
     <div id="deck-builder" class="hidden">
         <button id="deck-cancel">Cancel</button>
