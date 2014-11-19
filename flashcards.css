@@ -106,7 +106,8 @@
     display: block;
 }
 #control-body > button {
-    margin: 1em;
+    margin: 0.4em;
+    width: 7.5em;
 }
 #settings-undo {
     float: right;
