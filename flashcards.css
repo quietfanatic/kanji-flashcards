@@ -47,7 +47,10 @@
     cursor: auto;
 }
 .okurigana {
-    color: #7f7f7f;
+    color: #6f6f6f;
+}
+.theme-deepforest .okurigana {
+    color: #909890;
 }
 .okurigana:before {
     content: ".";
@@ -287,8 +290,11 @@
     width: 1.4em;
     height: 1.4em;
     text-align: center;
-    color: #7f7f7f;
+    color: #989898;
     cursor: pointer;
+}
+.theme-deepforest .grade-select > div {
+    color: #889088;
 }
 .grade-select > div.use {
     color: inherit;
