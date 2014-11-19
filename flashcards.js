@@ -82,6 +82,7 @@ function undo () {
     incorrect = incorrect.replace(deck[deck_i-1], "");
     save_deck();
     draw();
+    return false;
 }
 
 function continue_ () {
@@ -91,15 +92,17 @@ function continue_ () {
     incorrect = "";
     save_deck();
     draw();
+    return false;
 }
 
 function start_over () {
     if (deck_builder) return;
-    deck = shuffled(original_deck.split("")).join("");
+    deck = shuffle(original_deck.split("")).join("");
     correct = "";
     incorrect = "";
     save_deck();
     draw();
+    return false;
 }
 
 
@@ -135,6 +138,7 @@ function update_display () {
         $("#incorrect").text(incorrect);
         $("#correct-label").text("〇 " + correct.length);
         $("#correct").text(correct);
+        $("#continue")[0].disabled = incorrect.length == 0;  // No sense continuing with an empty deck
     }
     else {  // Show card
         $("#finished, #deck-builder").addClass("hidden");
