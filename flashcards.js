@@ -341,7 +341,6 @@ function initialize (data) {
         var pre_names_m = line.match(/(?:(?! T1).)*/);
         var names_m = line.match(/ T[^{]*/);
         var grade_m = line.match(/\bG[0-9]+\b/);
-        var unicode_m = line.match(/\bU[0-9a-f]+\b/);
 
         var onyomi = span_join(line.match(/-?[ァ-ヺ][.ァ-ヺ]*-?/g), "　");
         var kunyomi = pre_names_m[0].match(/-?[ぁ-ゖ][.ぁ-ゖ]*-?/g);
@@ -367,7 +366,6 @@ function initialize (data) {
         dictionary[line[0]] = {
             kanji: line[0],
             grade: grade_m == null ? 0 : parseInt(grade_m[0].slice(1)),
-            unicode: unicode_m[0].slice(1),
             onyomi: onyomi,
             kunyomi: kunyomi,
             nanori: nanori,
@@ -379,7 +377,6 @@ function initialize (data) {
         dictionary[k] = {
             kanji: k,
             grade: -1,  // whataver, not actually used
-            unicode: "",  // Do we even use this anywhere?
             onyomi: "",
             kunyomi: "",
             nanori: "",
@@ -391,7 +388,6 @@ function initialize (data) {
         dictionary[k] = {
             kanji: k,
             grade: -2,
-            unicode: "",
             onyomi: "",
             kunyomi: "",
             nanori: "",
