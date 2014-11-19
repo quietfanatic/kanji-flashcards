@@ -125,8 +125,11 @@
 #settings-show .settings-half {
     text-align: left;
 }
-#settings-show input {
+.settings-label {
     margin-left: 1em;
+}
+#settings-show input {
+    margin-left: 2em;
 }
 #settings-style select {
     margin-right: 0.2em;
