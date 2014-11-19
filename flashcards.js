@@ -5,14 +5,12 @@
 
 var dictionary = {};  // keyed by kanji
 
-var deck = "";  // deck[0] is displayed as the current card
-var flipped = false;
-var n_correct = 0;
-var deck_size = 0;
-
- // For undo purposes
-var old_deck = null;  // Just copy the entire darn thing
-var undo_yes = true;
+var original_deck = "";  // Deck as first created, unshuffled
+var deck = "";  // Current deck, shuffled
+var correct = "";  // Keep these to make the user proud
+var incorrect = "";  // Preserve for the next shuffle
+ // Deck is indexed by correct.length + incorrect.length :)
+var flipped = false;  // Currently not saved in localStorage.  TODO: make it be.
 
 var show_tutorial = true;
 
@@ -21,17 +19,16 @@ var deck_builder = false;
 ///// Actions /////
 
 function create_deck () {
-    old_deck = null;
-    deck = "";
+    original_deck = "";
      // Search deck builder for all selected kanji
     var selected = $(".grade-select > div.use");
     for (var i = 0; i < selected.length; i++) {
         if (selected[i].textContent in dictionary)
-            deck += selected[i].textContent;
+            original_deck += selected[i].textContent;
     }
-    deck = shuffle(deck.split("")).join("");
-    n_correct = 0;
-    deck_size = deck.length;
+    deck = shuffle(original_deck.split("")).join("");
+    correct = "";
+    incorrect = "";
     save_deck();
     draw();
 }
@@ -50,7 +47,7 @@ function stop_deck_builder () {
     update_display();
 }
 
-function draw () {
+function draw () {  // As in draw a card, not as in draw a picture
     if (deck_builder) return;
     flipped = false;
     update_display();
@@ -62,52 +59,31 @@ function flip () {
     update_display();
 }
 
-function process_card (action) {
-    if (deck_builder) return;
-    show_tutorial = false;
-    old_deck = deck;
-    if (action == "10") {
-        deck = deck.substr(1, 10) + deck[0] + deck.substr(11);
-    }
-    else if (action == "random") {
-        var i = 10 + Math.floor(Math.random() * (deck.length - 10));
-        deck = deck.substr(1, i) + deck[0] + deck.substr(i + 1);
-    }
-    else if (action == "back") {
-        deck = deck.slice(1) + deck[0];
-    }
-    else if (action == "remove") {
-        deck = deck.slice(1);
-    }
-    save_deck();
-}
-
-function undo () {
-    if (deck_builder) return;
-    if (old_deck == null) return;
-    if (undo_yes) n_correct -= 1;
-    deck = old_deck;
-    old_deck = null;
-    save_deck();
-    flip();
-}
-
 function yes () {
     if (deck_builder) return;
     if (!flipped) return true;
-    n_correct += 1;
-    undo_yes = true;
-    process_card($("#on-yes").val());
+    correct += deck[correct.length + incorrect.length];
+    save_deck();
     draw();
     return false;  // Prevent click from cascading to flip()
 }
 function no () {
     if (deck_builder) return;
     if (!flipped) return true;
-    undo_yes = false;
-    process_card($("#on-no").val());
+    incorrect += deck[correct.length + incorrect.length];
+    save_deck();
     draw();
     return false;
+}
+
+function undo () {
+    if (deck_builder) return;
+    var deck_i = correct.length + incorrect.length;
+    if (deck_i == 0) return;
+    correct = correct.replace(deck[deck_i-1], "");
+    incorrect = incorrect.replace(deck[deck_i-1], "");
+    save_deck();
+    flip();
 }
 
 
@@ -126,17 +102,20 @@ function update_display () {
         }
     }
      // Update card
-    if (deck.length == 0) {
+    var deck_i = correct.length + incorrect.length;
+    if (deck_i == deck.length) {
+         // TODO: proper end-of-phase screen
         $("#status").text("よく出来た！").removeClass("hidden");
         $("#kanji, .card-field, #everything").text("");
         current = "";
         $("#buttons, #screen-areas").addClass("hidden");
         $("#screen").removeClass("clickable");
+        $("#count").text(deck.length + "/" + deck.length);
     }
     else {
-        if (deck[0] != current) {
-            current = deck[0];
-            var def = dictionary[deck[0]];
+        if (deck[deck_i] != current) {
+            current = deck[deck_i];
+            var def = dictionary[deck[deck_i]];
             $("#kanji").html(def.kanji);
             $("#on-yomi").html(def.onyomi);
             $("#kun-yomi").html(def.kunyomi);
@@ -179,15 +158,15 @@ function update_display () {
             $("#buttons, #screen-areas").removeClass("hidden");
             $("#screen").removeClass("clickable");
         }
+        $("#count").text((deck_i + 1) + "/" + deck.length);
     }
-    if (old_deck != null) {
-        var symbol = undo_yes ? "〇" : "✕";
-        $("#undo").text("Undo " + symbol + " " + old_deck[0])[0].disabled = false;
+    if (deck_i != 0) {
+        var symbol = correct[correct.length-1] == deck[deck_i-1] ? "〇" : "✕";
+        $("#undo").text("Undo " + symbol + " " + deck[deck_i-1])[0].disabled = false;
     }
     else {
         $("#undo").text("Can't undo")[0].disabled = true;
     }
-    $("#count").text(n_correct + "/" + deck_size);
 }
 
 
@@ -195,21 +174,23 @@ function update_display () {
 
 function save_deck () {
     if (window.localStorage) {
+        localStorage.setItem("kanji-flashcards.original_deck", original_deck);
         localStorage.setItem("kanji-flashcards.deck", deck);
-        localStorage.setItem("kanji-flashcards.n_correct", n_correct);
-        localStorage.setItem("kanji-flashcards.deck_size", deck_size);
+        localStorage.setItem("kanji-flashcards.correct", correct);
+        localStorage.setItem("kanji-flashcards.incorrect", incorrect);
+         // Old version stuff
+        localStorage.removeItem("kanji-flashcards.n_correct");
+        localStorage.removeItem("kanji-flashcards.deck_size");
     }
 }
 function load_deck () {
-    if (window.localStorage && window.localStorage.getItem("kanji-flashcards.deck")) {
-        deck = [];
-        var deck_s = localStorage.getItem("kanji-flashcards.deck");
-        for (var i = 0; i < deck_s.length; i++) {
-            if (deck_s[i] in dictionary)
-                deck += deck_s[i];
-        }
-        n_correct = parseInt(localStorage.getItem("kanji-flashcards.n_correct"));
-        deck_size = parseInt(localStorage.getItem("kanji-flashcards.deck_size"));
+    if (window.localStorage && window.localStorage.getItem("kanji-flashcards.original_deck")) {
+         // Not bothering to validate the stored deck.
+         // If the user messes with it, they get what they get.
+        original_deck = window.localStorage.getItem("kanji-flashcards.original_deck");
+        deck = window.localStorage.getItem("kanji-flashcards.deck");
+        correct = window.localStorage.getItem("kanji-flashcards.correct");
+        incorrect = window.localStorage.getItem("kanji-flashcards.incorrect");
     }
     else {
         create_deck();
@@ -238,8 +219,7 @@ function save_settings () {
         localStorage.setItem("kanji-flashcards.theme", theme);
         var font = $("#font-select").val();
         localStorage.setItem("kanji-flashcards.font", font);
-        var actions = $("#on-no").val() + " " + $("#on-yes").val();
-        localStorage.setItem("kanji-flashcards.actions", actions);
+        localStorage.removeItem("kanji-flashcards.actions");
     }
 }
 function load_settings () {
@@ -269,12 +249,6 @@ function load_settings () {
         var font = localStorage.getItem("kanji-flashcards.font")
         if (font && valid_font(font)) {
             $("#font-select").val(font);
-        }
-        var actions = localStorage.getItem("kanji-flashcards.actions");
-        if (actions) {
-            var match = actions.match(/^(10|random|back) (random|back|remove)$/);
-            if (match[1]) $("#on-no").val(match[1]);
-            if (match[2]) $("#on-yes").val(match[2]);
         }
     }
 }
@@ -453,9 +427,9 @@ function initialize (data) {
     });
     $("#use-grade-1").click();
     $("#new")[0].disabled = false;
-     // Register event handlers
-    $("#no").click(no);
+     // Set up event handlers
     $("#yes").click(yes);
+    $("#no").click(no);
      // Click anywhere except #control to flip
     $("#screen").click(function(event){ if (!flipped) flip(); });
     $("#control").click(function(event){ event.stopPropagation(); });
@@ -465,8 +439,6 @@ function initialize (data) {
     $("#undo").click(undo);
     $("#settings-show input").change(function(){ save_settings(); update_display(); });
     $("#settings-style select").change(function(){ save_settings(); update_style(); });
-    $("#settings-actions select").change(save_settings);
-    $("#deck-cancel").click(stop_deck_builder);
     $("#deck-create").click(function(){
         stop_deck_builder();
         create_deck();
