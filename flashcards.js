@@ -151,7 +151,6 @@ function update_display () {
             $("#kun-yomi").html(def.kunyomi);
             $("#nanori").html(def.nanori);
             $("#meanings").html(def.meanings);
-            $("#everything").text(def.everything);
         }
         if (show_tutorial) {
             if (!flipped)
@@ -170,7 +169,6 @@ function update_display () {
             show_if_checked("#kun-yomi", "#front-kun-yomi");
             show_if_checked("#nanori", "#front-nanori");
             show_if_checked("#meanings", "#front-meanings");
-            show_if_checked("#everything", "#front-everything");
             $("#buttons, #screen-areas").addClass("hidden");
             $("#screen").addClass("clickable");
         }
@@ -180,7 +178,6 @@ function update_display () {
             show_if_checked("#kun-yomi", "#back-kun-yomi");
             show_if_checked("#nanori", "#back-nanori");
             show_if_checked("#meanings", "#back-meanings");
-            show_if_checked("#everything", "#back-everything");
             $("#buttons, #screen-areas").removeClass("hidden");
             $("#screen").removeClass("clickable");
         }
@@ -245,7 +242,6 @@ function save_settings () {
         if ($("#front-kun-yomi")[0].checked) front += " kun-yomi";
         if ($("#front-nanori")[0].checked) front += " nanori";
         if ($("#front-meanings")[0].checked) front += " meanings";
-        if ($("#front-everything")[0].checked) front += " everything";
         localStorage.setItem("kanji-flashcards.show-front", front);
         var back = "";
         if ($("#back-kanji")[0].checked) back += " kanji";
@@ -253,7 +249,6 @@ function save_settings () {
         if ($("#back-kun-yomi")[0].checked) back += " kun-yomi";
         if ($("#back-nanori")[0].checked) back += " nanori";
         if ($("#back-meanings")[0].checked) back += " meanings";
-        if ($("#back-everything")[0].checked) back += " everything";
         localStorage.setItem("kanji-flashcards.show-back", back);
         var theme = $("#theme-select").val();
         localStorage.setItem("kanji-flashcards.theme", theme);
@@ -271,7 +266,6 @@ function load_settings () {
             $("#front-kun-yomi")[0].checked = !!front.match(/\bkun-yomi\b/);
             $("#front-nanori")[0].checked = !!front.match(/\bnanori\b/);
             $("#front-meanings")[0].checked = !!front.match(/\bmeanings\b/);
-            $("#front-everything")[0].checked = !!front.match(/\beverything\b/);
         }
         var back = localStorage.getItem("kanji-flashcards.show-back");
         if (back) {
@@ -280,7 +274,6 @@ function load_settings () {
             $("#back-kun-yomi")[0].checked = !!back.match(/\bkun-yomi\b/);
             $("#back-nanori")[0].checked = !!back.match(/\bnanori\b/);
             $("#back-meanings")[0].checked = !!back.match(/\bmeanings\b/);
-            $("#back-everything")[0].checked = !!back.match(/\beverything\b/);
         }
         var theme = localStorage.getItem("kanji-flashcards.theme");
         if (theme && valid_theme(theme)) {
@@ -370,7 +363,6 @@ function initialize (data) {
             kunyomi: kunyomi,
             nanori: nanori,
             meanings: meanings,
-            everything: line
         };
     }
     for (var k in hiragana) {
@@ -381,7 +373,6 @@ function initialize (data) {
             kunyomi: "",
             nanori: "",
             meanings: hiragana[k],
-            everything: ""
         };
     }
     for (var k in katakana) {
@@ -392,7 +383,6 @@ function initialize (data) {
             kunyomi: "",
             nanori: "",
             meanings: katakana[k],
-            everything: ""
         };
     }
      // Create deck builder
