@@ -2,8 +2,13 @@
 Basic kanji flash cards web application.
 
 Uses KANJIDIC from http://www.csse.monash.edu.au/~jwb/kanjidic.html
-To install, please download the KANJIDIC file from that website and process it with:
+To install, please download the KANJIDIC file from that website and process it with
 
     gunzip -c kanjidic.gz | iconv -f euc-jp -t utf-8 > kanjidic.utf-8
     grep -E ' G[1-6] ' kanjidic.utf-8 > kanjidic.1-6
 
+You can further minify the file with
+
+    perl -pi.bak -e 's/ +(?:(?![GT])[A-Za-z0-9.-]+(?=.*?[ぁ-ヺ])|$)//g' kanjidic.1-6
+
+taking it from 300k to 90k.
