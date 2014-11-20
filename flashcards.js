@@ -105,6 +105,33 @@ function start_over () {
     return false;
 }
 
+function import_deck () {
+    var text = $("#import-text").val();
+    var have = {};
+    for (var i = 0; i < text.length; i++) {
+        if (text[i] in dictionary) {
+            have[text[i]] = true;
+        }
+    }
+    var selects = $(".grade-select > div");
+    for (var i = 0; i < selects.length; i++) {
+         // This feels a bit flimsy
+        if ((selects[i].textContent in have) != (selects[i].className == "use")) {
+            $(selects[i]).click();
+        }
+    }
+}
+
+function export_deck () {
+    var text = "";
+    var selected = $(".grade-select > div.use");
+    for (var i = 0; i < selected.length; i++) {
+        if (selected[i].textContent in dictionary)
+            text += selected[i].textContent;
+    }
+    $("#import-text").val(text);
+}
+
 
 ///// Display /////
 
@@ -438,7 +465,7 @@ function initialize (data) {
         $("#grade-" + grade + "-count").text(num + "/" + den);
         $("#use-grade-" + grade)[0].checked = (num > 0);
     });
-    $(".use-grade > input").change(function (event) {
+    $(".use-grade").change(function (event) {
         var self = event.currentTarget;
         var grade = self.id.match(/^use-grade-(.*)$/)[1];
         var individuals = $("#grade-" + grade + "-select > div");
@@ -472,6 +499,8 @@ function initialize (data) {
         create_deck();
     });
     $("#deck-cancel").click(stop_deck_builder);
+    $("#import").click(import_deck);
+    $("#export").click(export_deck);
     $("#status").text("Everything's ready.").addClass("hidden");
     $(document).keydown(function(e){
         if (e.which == 13 || e.which == 32) {

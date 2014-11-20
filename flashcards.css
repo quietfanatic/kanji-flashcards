@@ -252,39 +252,44 @@
 #deck-builder > button {
     margin: 1em;
 }
-#grades {
-    border-bottom: 1px solid;
-}
-.hide-grade {
+.hide-db-section {
     display: none;
 }
-.grade {
+.db-section {
     padding: 0.2em;
     padding-right: 0.4em;
     border-top: 1px solid;
     clear: both;
 }
-.use-grade {
+.db-title {
     float: left;
 }
-.grade-individual {
+#import-section .db-title {
+    margin-left: 1.6em;
+}
+.db-label {
     cursor: pointer;
     float: right;
 }
-.grade-individual:after {
+.db-label:after {
     content: " ▼";
 }
-.hide-grade:checked + .grade .grade-individual:after {
+.hide-db-section:checked + .db-section .sb-label:after {
     content: " ▲";
 }
-.grade-select {
+.db-body {
     display: none;
-    font-size: 200%;
-    text-align: left;
     clear: both;
 }
-.hide-grade:checked + .grade .grade-select {
+#deck-builder > .db-section {
+    border-bottom: 1px solid;
+}
+.hide-db-section:checked + .db-section .db-body {
     display: block;
+}
+.grade-select {
+    font-size: 200%;
+    text-align: left;
 }
 .grade-select > div {
     display: inline-block;
@@ -299,5 +304,15 @@
 }
 .grade-select > div.use {
     color: inherit;
+}
+#import-buttons > button {
+    margin: 1em;
+    margin-top: 0em;
+    margin-bottom: 0.5em;
+}
+#import-text {
+    width: 99%;
+    height: 8em;
+    margin-bottom: 0.5em;
 }
 

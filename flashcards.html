@@ -95,17 +95,32 @@
         <button id="deck-cancel">Cancel</button>
         <button id="deck-create">Create</button>
         <div id="grades">
-            <input type="checkbox" class="hide-grade" id="hide-grade-#" />
-            <div class="grade" >
-                <div class="grade-header">
-                    <div class="use-grade">
-                        <input type="checkbox" id="use-grade-#" />
+            <input type="checkbox" class="hide-db-section" id="hide-grade-#" />
+            <div class="db-section">
+                <div class="db-header">
+                    <div class="db-title">
+                        <input type="checkbox" class="use-grade" id="use-grade-#" />
                         <label for="use-grade-#">Grade #</label>
                     </div>
                     <span id="grade-#-count">0/0</span>
-                    <label class="grade-individual" for="hide-grade-#">Select individual</label>
+                    <label class="db-label" for="hide-grade-#">Select individual</label>
                 </div>
-                <div class="grade-select jp" id="grade-#-select">仮</div>
+                <div class="db-body grade-select jp" id="grade-#-select">仮</div>
+            </div>
+        </div>
+        <input type="checkbox" class="hide-db-section" id="hide-import" />
+        <div class="db-section" id="import-section">
+            <div class="db-header">
+                <div class="db-title">Import</div>
+                <span>　</span>
+                <label class="db-label" for="hide-import">Text input</label>
+            </div>
+            <div class="db-body">
+                <div id="import-buttons">
+                    <button id="import">▲ Import</button>
+                    <button id="export">Export ▼</button>
+                </div>
+                <textarea id="import-text"></textarea>
             </div>
         </div>
     </div>
