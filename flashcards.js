@@ -444,6 +444,16 @@ function initialize (data) {
         builder += template.replace(/#/g, i).replace("0/0", "0/" + count).replace("仮", individual);
     }
     $("#grades").html(builder);
+    function disable_create_if_empty () {
+        var checks = $(".use-grade");
+        for (var i = 0; i < checks.length; i++) {
+            if (checks[i].checked) {
+                $("#deck-create")[0].disabled = false;
+                return;
+            }
+        }
+        $("#deck-create")[0].disabled = true;
+    }
     $(".grade-select > div").click(function (event) {
         var self = event.currentTarget;
         var parent = self.parentNode;
@@ -464,6 +474,7 @@ function initialize (data) {
         }
         $("#grade-" + grade + "-count").text(num + "/" + den);
         $("#use-grade-" + grade)[0].checked = (num > 0);
+        disable_create_if_empty();
     });
     $(".use-grade").change(function (event) {
         var self = event.currentTarget;
@@ -477,6 +488,7 @@ function initialize (data) {
             $("#grade-" + grade + "-count").text("0/" + individuals.length);
             individuals.attr("class", "");
         }
+        disable_create_if_empty();
     });
     $("#new")[0].disabled = false;
      // Set up event handlers
