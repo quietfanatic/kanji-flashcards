@@ -36,7 +36,7 @@
 .hidden {
     display: none;
 }
-.hidden#kanji {
+.hidden#kanji-outer {
     display: block;
     visibility: hidden;
 }

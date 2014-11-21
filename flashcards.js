@@ -191,7 +191,7 @@ function update_display () {
         }
          // Select which fields are visible
         if (!flipped) {  // front
-            show_if_checked("#kanji", "#front-kanji");
+            show_if_checked("#kanji-outer", "#front-kanji");
             show_if_checked("#on-yomi", "#front-on-yomi");
             show_if_checked("#kun-yomi", "#front-kun-yomi");
             show_if_checked("#nanori", "#front-nanori");
@@ -200,7 +200,7 @@ function update_display () {
             $("#screen").addClass("clickable");
         }
         else {  // back
-            show_if_checked("#kanji", "#back-kanji");
+            show_if_checked("#kanji-outer", "#back-kanji");
             show_if_checked("#on-yomi", "#back-on-yomi");
             show_if_checked("#kun-yomi", "#back-kun-yomi");
             show_if_checked("#nanori", "#back-nanori");
