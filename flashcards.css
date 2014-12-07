@@ -274,7 +274,7 @@
 .db-label:after {
     content: " ▼";
 }
-.hide-db-section:checked + .db-section .sb-label:after {
+.hide-db-section:checked + .db-section .db-label:after {
     content: " ▲";
 }
 .db-body {
